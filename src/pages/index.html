@@ -1,0 +1,50 @@
+<div class="row small-up-1 expand">
+  <div class="columns">
+    <h1>Welcome to the IINTOO Lead Manager</h1>
+  </div>
+</div>
+
+<div class="row small-up-4">
+  <form>
+    <div class='column small-2'><input id="checkbox1" type="checkbox" checked='true'><label for="checkbox1">Leads</label></div>
+    <div class='column small-2'><input id="checkbox2" type="checkbox" checked='true'><label for="checkbox2">Unprocessed</label></div>
+    <div class='column small-2'><input id="checkbox3" type="checkbox" checked='true'><label for="checkbox3">Quarentined</label></div>
+    
+    <div class="small-4  medium-4 large-4 column">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Start date&nbsp;
+              <a href="#" class="button tiny" id="dp4" data-date-format="yyyy-mm-dd" data-date="2015-01-01">Change</a>
+            </th>
+            <th>End date&nbsp;
+              <a href="#" class="button tiny" id="dp5" data-date-format="yyyy-mm-dd" data-date="2017-06-18">Change</a>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="startDate">2015-01-01</td>
+            <td id="endDate">2017-06-18</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert alert-box" style="display:none;" id="alert"> <strong>Oh snap!</strong></div>
+    </div>
+    <button id="csvButton" type="button" class="button column small-1">Download CSV</button>
+  </form>
+</div>
+
+<div class="row small-1-up expand">
+    <table id="table1" class="column small-12" style="table-layout: fixed; word-wrap:break-word;">
+      <thead>
+        <tr >
+          {{#each global.leadHeaders}}
+          <th width="{{ width }}"><a href="#{{ fieldName }}">{{ friendlyName }}</a></th>
+          {{/each}}
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+</div>
