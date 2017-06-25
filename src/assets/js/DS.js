@@ -19,7 +19,7 @@ class DS {
             //var syncop=Math.floor(Math.random() * (4 - 0)) + 0;
             var syncop=faker.random.number() % 4;// Math.floor(Math.random() * (4 - 0)) + 0;
 
-            var randomName  = faker.name.findName(); // Caitlyn Kerluke
+            var randomName  = faker.name.findName(2); // Caitlyn Kerluke
             var fname=randomName.split(" ")[0];
             var lname=randomName.split(" ")[1];
             var randomEmail = faker.internet.email(randomName); // Rusty@arne.info

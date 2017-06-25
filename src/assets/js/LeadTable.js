@@ -8,52 +8,66 @@ class LeadTable {
         console.log('LeadTable'); 
         this.self = this;             
         self.rowsData=data;
-     //   this.table;//=$('#'+tableId);
-     //   this.table = $('#' + tableId);
-        self.startDate = new Date(2015, 1, 1);
-        self.endDate = new Date();
-        this.dp();
-        this.renderRows();
+        self._startDate = new Date(2016, 1, 1);
+        self._endDate = new Date();        
+        $("#csvButton").on( "click", this.genCSV);
+        this.setUpDP(self._startDate,self._endDate);
+        
+    }
+
+      
+    get startDate() {
+        return this._startDate;
+    }
+  
+    set startDate(newStartDate) {
+        this._startDate = newStartDate;   
+    }
+
+    get endDate() {
+        return this._endtDate;
+    }
+  
+    set endDate(newEndtDate) {
+        this._endtDate = newEndtDate;   
+    }
+
+    selectStyle(syncop,is_iintoo){
+        if (syncop > 2)     return 'leadBad';
+        if (!is_iintoo)      return 'leadFail';
+        else                 return 'leadGood';
     }
 
     renderRows() {
         console.log('LeadTable.renderRows()'); 
         var table1 = $('#table1')
-        //clean the data;
-        
+        //clean the data if there is old data        
         $('#table1 tbody tr').remove();
         var colData;
         var myStyle;
         console.log(self.rowsData.length);
         self.rowsData.forEach(function (rowData){
-
             let myDate = new Date(rowData['date']*1000);
-            // console.log("start :"+self.startDate);                        
-            // console.log("end   :"+self.endDate);
-            // console.log("row   :"+rowDate);
-            if( myDate <=  self.endDate && myDate >=  self.startDate)
-            {
-                if (rowData['syncop'] >= 3)      myStyle = 'leadBad';
-                else if (!rowData['is_iintoo'])  myStyle = 'leadFail';
-                else                             myStyle = 'leadGood';
-
-                var row = $('<tr class="' + myStyle + '" ></tr>');
-                row.append("<td>" + rowData['firstName'] + "</td>");
-                row.append("<td>" + rowData['lastName'] + "</td>");
-                row.append("<td>" + rowData['email'] + "</td>");
-                row.append("<td>" + rowData['phone'] + "</td>");
-                row.append("<td>" + rowData['newsletter'] + "</td>");
-                row.append("<td>" + rowData['ad_ID'] + "</td>");
-                row.append("<td>" + rowData['campaign_ID'] + "</td>");
-                row.append("<td>" + rowData['device'] + "</td>");
-                row.append("<td>" + rowData['language'] + "</td>");
-                row.append("<td style='word-wrap:break-word;'>" + rowData['sent_from'] + "</td>");
-                row.append("<td>" + rowData['is_iintoo'] + "</td>");
-                row.append("<td>" + rowData['syncop'] + "</td>");
-                row.append("<td>" + myDate.toDateString() + "</td>");
+            if( myDate >  self._startDate && myDate <  self._endDate ){        
+               
+                var row = $('<tr/>').attr({class: this.selectStyle(rowData['syncop'],rowData['is_iintoo'])})
+                .append($('<td/>').text(rowData['firstName'  ]))
+                .append($('<td/>').text(rowData['lastName'   ]))
+                .append($('<td/>').text(rowData['email'      ]))
+                .append($('<td/>').text(rowData['phone'      ]))
+                .append($('<td/>').text(rowData['newsletter' ]))
+                .append($('<td/>').text(rowData['ad_ID'      ]))
+                .append($('<td/>').text(rowData['campaign_ID']))
+                .append($('<td/>').text(rowData['device'     ]))
+                .append($('<td/>').text(rowData['language'   ]))
+            //    .append($('<td>').append($('<a/>').attr('href',rowData['sent_from']).text( rowData['sent_from'].substring(15, 41) + "...")))
+                .append($('<td/>').text(rowData['sent_from']))
+                .append($('<td/>').text(rowData['is_iintoo'  ]))
+                .append($('<td/>').text(rowData['syncop'     ]))
+                .append($('<td/>').text(myDate.toDateString()));
                 table1.append(row);
             }
-        });
+        }.bind(this));
     }
 
     static unx2data(unix_timestamp) {
@@ -69,44 +83,79 @@ class LeadTable {
         var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec;
         return time;
     }
+    
+    genCSV(){
+        console.log("LeadTable.genCSV()");
+        var data = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
+        var csvContent = "data:text/csv;charset=utf-8,";
+        data.forEach(function(infoArray, index){
+            var dataString = infoArray.join(",");
+            csvContent += index < data.length ? dataString+ "\n" : dataString;
+
+        }); 
+    
+        //var encodedUri = encodeURI(csvContent);
+        //window.open(encodedUri);
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "my_data.csv");
+        document.body.appendChild(link); // Required for FF
+        link.click(); // This will download the data file named "my_data.csv".
+
+    }
 
     /** data picker logic
      * 
      */
-     dp() {
-
-        $(function () {
-            // implementation of custom elements instead of inputs
+     setUpDP(_startDate,_endDate) {
 
 
-            $('#dp4').fdatepicker()
-                .on('changeDate', function (ev) {
-                    if (ev.date.valueOf() > endDate.valueOf()) {
-                        $('#alert').show().find('strong').text('The start date can not be greater then the end date');
-                    } else {
-                        $('#alert').hide();
-                        controller.startDate = new Date(ev.date);
-                        console.log("new start date: "+controller.startDate);
-                        $('#startDate').text($('#dp4').data('date'));
-                        controller.renderRows();   
-                    }
-                    $('#dp4').fdatepicker('hide');
-                    
-                });
-            $('#dp5').fdatepicker()
-                .on('changeDate', function (ev) {
-                    if (ev.date.valueOf() < startDate.valueOf()) {
-                        $('#alert').show().find('strong').text('The end date can not be less then the start date');
-                    } else {
-                        $('#alert').hide();
-                        controller.endDate = new Date(ev.date);
-                        console.log("new end date: "+controller.endDate);
-                        $('#endDate').text($('#dp5').data('date'));
-                        controller.renderRows();
-                    }
-                    $('#dp5').fdatepicker('hide');                 
-                });
+        $('#startDate').fdatepicker({
+         // initialDate: '01-01-2016',
+         //   initialDate: _startDate.toDateString(),
+            initialDate: _startDate,
+         //   initialDate: controller.startDate.toDateString(),
+            format: 'dd-mm-yyyy',
+            disableDblClickSelection: true,
+            leftArrow:'<<',
+            rightArrow:'>>',
+            closeIcon:'X',
+            closeButton: true
+        });
+
+        $('#endDate').fdatepicker({
+            initialDate: _endDate, //'30-12-2016',
+            format: 'dd-mm-yyyy',
+            disableDblClickSelection: true,
+            leftArrow:'<<',
+            rightArrow:'>>',
+            closeIcon:'X',
+            closeButton: true
+        });
+
+        $('#startDate').fdatepicker().on('changeDate', function (ev) {    
+            console.log(ev.date);             
+            controller.startDateChanged(ev.date);              
+        });
+
+        $('#endDate').fdatepicker().on('changeDate', function (ev) {               
+            console.log(ev.date);            
+            controller.endDateChanged(ev.date);              
         });
     }
-}
 
+    startDateChanged(date){
+        console.log("LeadTable.startDateChanged()");
+        self._startDate=date;
+        console.log("new start date: "+controller.startDate);
+        controller.renderRows();
+    }
+
+    endDateChanged(date){
+        console.log("LeadTable.endDateChanged()");
+        self._endDate=date;
+        console.log("new end date: "+controller.endDate);
+        controller.renderRows();
+    }
+}

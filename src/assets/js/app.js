@@ -12,7 +12,7 @@ function setPageModule(pageName)
            case 'index':                
                 console.log(ds);
                 controller = new LeadTable('table1',ds.data);    
-                                     
+                controller.renderRows();     
                 //alert(pageName);
                 //todo: test these
                 //todo: move these to the leadtable controller  

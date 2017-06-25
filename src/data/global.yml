@@ -38,7 +38,7 @@ leadHeaders:
 -
  fieldName : source
  friendlyName : sent from
- width : 390px
+ width : 230px
 -
  fieldName : is_iintoo
  friendlyName : Processed

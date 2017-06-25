@@ -9,9 +9,22 @@ import rimraf   from 'rimraf';
 import sherpa   from 'style-sherpa';
 import yaml     from 'js-yaml';
 import fs       from 'fs';
+import mocha    from 'gulp-mocha';
 
 // Load all Gulp plugins into one variable
 const $ = plugins();
+
+gulp.task('test',mochaTest);
+
+ function mochaTest() {
+  return gulp.src(['test/test-*.js'], { read: false })
+    .pipe(mocha({
+      reporter: 'spec',
+      globals: {
+        should: require('should')
+      }
+    }));
+}
 
 // Check for --production flag
 const PRODUCTION = !!(yargs.argv.production);
