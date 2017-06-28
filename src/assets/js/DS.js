@@ -8,7 +8,28 @@ class DS {
        faker.seed(123);
        this.self=this;
        this.data=this._getLeadData(amount);
+       this.dataService=_initBackAnd();
     }
+
+
+_initBackAnd(){
+
+      var v = {
+        init: function(){
+            backand.init(
+            {
+                appName: 'reactnativetodoexample',               
+                anonymousToken: '553d5722-dfa1-401f-8cde-1425476751d1'
+                 // runSocket: false
+                }
+            );   
+        },
+        // Other code here
+
+
+    };
+    return _initBackAnd;
+}
 
     _getLeadData(amount) {
 

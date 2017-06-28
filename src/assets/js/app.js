@@ -5,10 +5,13 @@ $(document).foundation();
 var ds=new DS(); //data layer
 var controller;  //the page's controller
 
-
 function setPageModule(pageName)
 {       
        switch (pageName) {
+           case 'LeadForm':
+                controller = new LeadForm(); 
+                //alert(pageName);   
+                break;
            case 'index':                
                 console.log(ds);
                 controller = new LeadTable('table1',ds.data);    
@@ -22,8 +25,7 @@ function setPageModule(pageName)
                          $(".leadGood").show();
                     }else{
                         $(".leadGood").hide();
-                    }                  
-                     
+                    }                                       
                 });
                 $('#checkbox2').change(function(){
 
@@ -40,14 +42,10 @@ function setPageModule(pageName)
                     }else{
                         $(".leadBad").hide();
                     }  
-                });
-                
+                });                
                 break;
            default:
                alert(pageName);
                break;
-       }
-       
+       }       
 }
-
-

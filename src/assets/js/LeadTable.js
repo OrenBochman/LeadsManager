@@ -33,7 +33,7 @@ class LeadTable {
     }
 
     selectStyle(syncop,is_iintoo){
-        if (syncop > 2)     return 'leadBad';
+        if (syncop > 2)      return 'leadBad';
         if (!is_iintoo)      return 'leadFail';
         else                 return 'leadGood';
     }
