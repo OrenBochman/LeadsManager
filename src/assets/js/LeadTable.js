@@ -9,12 +9,40 @@ class LeadTable {
         this.self = this;             
         self.rowsData=data;
         self._startDate = new Date(2016, 1, 1);
-        self._endDate = new Date();        
+        self._endDate = new Date(); 
         $("#csvButton").on( "click", this.genCSV);
         this.setUpDP(self._startDate,self._endDate);
-        
+        this.setupFilters()
     }
 
+
+    setupFilters(){
+
+        $('#checkbox1').change(function(){            
+            if( $('#checkbox1').is(':checked') ) {
+                    $(".leadGood").show();
+            }else{
+                $(".leadGood").hide();
+            }                                       
+        });
+
+        $('#checkbox2').change(function(){
+            if( $('#checkbox2').is(':checked') ) {
+                    $(".leadFail").show();
+            }else{
+                $(".leadFail").hide();
+            }  
+        });
+
+        $('#checkbox3').change(function(){
+            if( $('#checkbox3').is(':checked') ) {
+                    $(".leadBad").show();
+            }else{
+                $(".leadBad").hide();
+            }  
+        }); 
+
+    }
       
     get startDate() {
         return this._startDate;

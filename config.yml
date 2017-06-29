@@ -61,7 +61,9 @@ PATHS:
     # Paths to your own project code 
     - "bower_components/foundation-datepicker/js/foundation-datepicker.min.js"
     - "bower_components/faker/build/build/faker.min.js"
-    - "src/assets/js/!(app).js"
-    - "src/assets/js/app.js"
     - "bower_components/backand-vanilla-sdk/dist/backand.min.js"
+    - "src/assets/js/!(app).js"
+    # app.js must be last
+    - "src/assets/js/app.js"
+   
     

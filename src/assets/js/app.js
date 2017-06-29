@@ -2,50 +2,31 @@
 'use strict';
 
 $(document).foundation();
+ console.log("app startting")
+
 var ds=new DS(); //data layer
+ds._initBackAnd();
 var controller;  //the page's controller
 
 function setPageModule(pageName)
 {       
+     console.log("page loaded")
+
+          
        switch (pageName) {
            case 'LeadForm':
+                console.log(pageName+" - controller loaded")
+
                 controller = new LeadForm(); 
                 //alert(pageName);   
                 break;
            case 'index':                
-                console.log(ds);
+                console.log(pageName+" - controller loaded")
                 controller = new LeadTable('table1',ds.data);    
-                controller.renderRows();     
-                //alert(pageName);
-                //todo: test these
-                //todo: move these to the leadtable controller  
-                $('#checkbox1').change(function(){
-                 
-                    if( $('#checkbox1').is(':checked') ) {
-                         $(".leadGood").show();
-                    }else{
-                        $(".leadGood").hide();
-                    }                                       
-                });
-                $('#checkbox2').change(function(){
-
-                    if( $('#checkbox2').is(':checked') ) {
-                         $(".leadFail").show();
-                    }else{
-                        $(".leadFail").hide();
-                    }  
-                });
-                $('#checkbox3').change(function(){
-
-                    if( $('#checkbox3').is(':checked') ) {
-                         $(".leadBad").show();
-                    }else{
-                        $(".leadBad").hide();
-                    }  
-                });                
+                controller.renderRows();                                
                 break;
            default:
-               alert(pageName);
-               break;
+                console.log(pageName+" - controller loaded")
+                break;
        }       
 }
