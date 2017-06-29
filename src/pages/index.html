@@ -1,53 +1,37 @@
-<div class="row small-up-1 expand">
-  <div class="columns">
+<div class="row  ">
+  <div class="column">
     <h1>Welcome to the IINTOO Lead Manager</h1>
   </div>
 </div>
-
-
-  <form>
-    <div class="row small-up-4">    
-      <div class='column small-2'>
-        <input id="checkbox1" type="checkbox" checked='true'/><label for="checkbox1">Leads</label>
-      </div>
-      <div class='column small-2'>
-        <input id="checkbox2" type="checkbox" checked='true'/><label for="checkbox2">Unprocessed</label>
-      </div>
-      <div class='column small-2'>
-        <input id="checkbox3" type="checkbox" checked='true'/><label for="checkbox3">Quarentined</label>
-      </div>
-      <div class="button column small-1">
-        <button  id="csvButton" type="button" >Download CSV</button> 
+   <form>
+    <!-- datapicker row -->
+    <div class="row small-up-4  ">
+      <div class="column small-1"><span class="prefix">start<i class="fa fa-calendar"></i></span></div>
+      <div class="column small-3"><input id="startDate" size="16" type="text" value="" readonly></div>
+      <div class="column small-1"><span class="prefix">end<i class="fa fa-calendar"></i></span></div>
+      <div class="column small-3"><input id="endDate" size="16" type="text" value="" readonly>
       </div>
     </div>
-    <div class="row small-up-4" >    
-      <div class="column small-1">	
-        <span class="prefix">start<i class="fa fa-calendar"></i></span>
-      </div>
-      <div class="column small-3">
-        <input id="startDate" size="16" type="text" value="" readonly>	
-      </div>
-
-      <div class="column small-1">	
-        <span class="prefix">end<i class="fa fa-calendar"></i></span>
-      </div>
-      <div class="column small-3">
-        <input id="endDate" size="16" type="text" value="" readonly>	
-      </div>
+    
+    <!-- selectors and csv -->
+    <div class="row small-up-4  ">
+      <div class='column'><input id="checkbox1" type="checkbox" checked='true'> Leads</input></div>
+      <div class='column'><input id="checkbox2" type="checkbox" checked='true'> Unprocessed</input></div>
+      <div class='column '><input id="checkbox3" type="checkbox" checked='true'> Quarentined</input></div>
+      <div class='button '><button id="csvButton" type="button">Download CSV</button></div>
     </div>
+
   </form>
-</div>
 
-<div class="row small-1-up expand">
-    <table id="table1" class="column small-12" style="table-layout: fixed; word-wrap:break-word;">
-      <thead>
-        <tr >
-          {{#each global.leadHeaders}}
-          <th width="{{ width }}"><a href="#{{ fieldName }}">{{ friendlyName }}</a></th>
-          {{/each}}
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
+<div class="row  expanded ">
+  <table id="table1" class="column small-12 " style="table-layout: fixed; word-wrap:break-word;">
+    <thead>
+      <tr>
+        {{#each global.leadHeaders}}
+        <th width="{{ width }}"><a href="#{{ fieldName }}">{{ friendlyName }}</a></th>
+        {{/each}}
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>

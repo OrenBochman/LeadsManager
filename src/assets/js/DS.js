@@ -5,7 +5,6 @@ class DS {
     constructor(amount=120){
        faker.seed(123);
        this.self=this;
-       this.data=this._getLeadData(amount);
        console.log('DS initilised'); 
     }
 
@@ -35,80 +34,97 @@ _initBackAnd(){
         }
     }
 
-
-
-    getData(){
-
-        // var dataService = {
-        // //other code here
-        // getList: function(){
-        //         var params =  {
-        //         sort: backand.helpers.sort.create('creationDate', backand.helpers.sort.orders.desc),
-        //         exclude: backand.helpers.exclude.options.all,
-        //         pageSize: 10,
-        //         pageNumber: 1,
-        //         filter: backand.helpers.filter.create('completionDate', backand.helpers.filter.operators.date.empty, '')
-        //         };
-        //         return backand.object.getList('todos',params);
-        // },
-        // // Other code here
-        // };
-
+    //get data for form
+    getLeads(e ){
         console.log('getData');
-        console.log('backand.object');
+       // console.log('backand.object');
         
         // Retrieve a list of records from the server
         backand.object.getList('leads').then((response) => {
-        console.log(response);
-        $("BackAndResponse").append(response);
-    
+            console.log(response.data);
+           $("#BackAndResponse").append(ds.stringfy(response.data));
         })
         .catch(function(error){
             console.log(error);
-            $("BackAndError").append(error);
+            $("#BackAndError").append(error);
+        });
+    }
+    
+    stringfy (obj) {
+        var t = typeof (obj);
+        if (t != "object" || obj === null) {
+            // simple data type
+            if (t == "string") obj = '"'+obj+'"';
+            return String(obj);
+        }
+        else {
+            // recurse array or object
+            var n, v, json = [], arr = (obj && obj.constructor == Array);
+            for (n in obj) {
+                v = obj[n]; t = typeof(v);
+                if (t == "string") v = '"'+v+'"';
+                else if (t == "object" && v !== null) v = JSON.stringify(v);
+                json.push((arr ? "" : '"' + n + '":') + String(v));
+            }
+            return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
+        }
+    }
+
+    //get data for table etc
+    _getLeadData(){
+
+        console.log('_getLeadData');
+        
+        // Retrieve a list of records from the server
+        backand.object.getList('leads').then((response) => {
+          console.log(response.data);
+          this.leadsData=response.data;
+          controller.renderRows();
+          //console.log("_getLeadData");
+
+        })
+        .catch(function(error){
+          console.log(error);
         });
     }
 
-_getLeadData(amount) {
+    _getLeadDataStub(amount) {
 
-    var stub_data=[];
-    var campaign = ["Ynet article","Calcalist article","Globes article","Taboola article"]
-    for(var i=0;i<amount;i++){
+        var stub_data=[];
+        var campaign = ["Ynet article","Calcalist article","Globes article","Taboola article"]
+        for(var i=0;i<amount;i++){
+            var syncop=faker.random.number() % 4;
+            var randomName  = faker.name.findName(2); 
+            var fname=randomName.split(" ")[0];
+            var lname=randomName.split(" ")[1];
+            var randomEmail = faker.internet.email(randomName);
+            var randomPhone= faker.phone.phoneNumber();
+            var randomDate= Math.floor(Math.random() * (1497324083 - 1465832406)) + 1465832406;
+            var ad_ID = faker.random.number() % 2 >0 ? "Onepager Prime" : "Onepager Shark";
+            var campaign_ID = campaign[faker.random.number() % 4];
+                    
+            var datum = {
+                ad_ID       : ad_ID,
+                campaign_ID : campaign_ID,
+                date        : randomDate,
+                device      : "desktop",
+                email       : randomEmail,
+                firstName   : fname,
+                id          : 1000+i,
+                is_iintoo   : syncop>0 ? false: true,
+                language    : "en",
+                lastName    : lname,
+                newsletter  : faker.random.boolean(),
+                password    : "ASAF1976",
+                phone       : randomPhone,
+                sent_from   : "http://invest.iintoo.com/onepager-prime/?utm_source=ynet&utm_medium=link&utm_campaign=ynetOnepagerPrime&campaignID=Ynet_article&adID=OnepagerPrime#form",
+                syncop      : syncop
+            };
 
-        //var syncop=Math.floor(Math.random() * (4 - 0)) + 0;
-        var syncop=faker.random.number() % 4;// Math.floor(Math.random() * (4 - 0)) + 0;
-
-        var randomName  = faker.name.findName(2); // Caitlyn Kerluke
-        var fname=randomName.split(" ")[0];
-        var lname=randomName.split(" ")[1];
-        var randomEmail = faker.internet.email(randomName); // Rusty@arne.info
-        var randomPhone= faker.phone.phoneNumber();
-        var randomDate= Math.floor(Math.random() * (1497324083 - 1465832406)) + 1465832406;
-        var ad_ID = faker.random.number() % 2 >0 ? "Onepager Prime" : "Onepager Shark";
-        var campaign_ID = campaign[faker.random.number() % 4];
-        //var campaign_ID = "Ynet_article";          
-        var datum = {
-            ad_ID       : ad_ID,
-            campaign_ID : campaign_ID,
-            date        : randomDate,
-            device      : "desktop",
-            email       : randomEmail,
-            firstName   : fname,
-            id          : 1000+i,
-            is_iintoo   : syncop>0 ? false: true,
-            language    : "en",
-            lastName    : lname,
-            newsletter  : faker.random.boolean(),
-            password    : "ASAF1976",
-            phone       : randomPhone,
-            sent_from   : "http://invest.iintoo.com/onepager-prime/?utm_source=ynet&utm_medium=link&utm_campaign=ynetOnepagerPrime&campaignID=Ynet_article&adID=OnepagerPrime#form",
-            syncop      : syncop
-        };
-
-        stub_data.push(datum);            
-    }  
-    return stub_data;
-}
+            stub_data.push(datum);            
+        }  
+        return stub_data;
+    }
 
 
 } 

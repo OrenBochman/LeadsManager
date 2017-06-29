@@ -5,7 +5,7 @@
 class LeadTable {
 
     constructor(tableId,data) {
-        console.log('LeadTable'); 
+        console.log('LeadTable ctor start'); 
         this.self = this;             
         self.rowsData=data;
         self._startDate = new Date(2016, 1, 1);
@@ -13,8 +13,8 @@ class LeadTable {
         $("#csvButton").on( "click", this.genCSV);
         this.setUpDP(self._startDate,self._endDate);
         this.setupFilters()
+        console.log('LeadTable ctor done'); 
     }
-
 
     setupFilters(){
 
@@ -73,11 +73,11 @@ class LeadTable {
         $('#table1 tbody tr').remove();
         var colData;
         var myStyle;
-        console.log(self.rowsData.length);
-        self.rowsData.forEach(function (rowData){
+        console.log(ds.leadsData.length);
+        ds.leadsData.forEach(function (rowData){
+            console.log(rowData);
             let myDate = new Date(rowData['date']*1000);
-            if( myDate >  self._startDate && myDate <  self._endDate ){        
-               
+         //   if( myDate >  self._startDate && myDate <  self._endDate ){              
                 var row = $('<tr/>').attr({class: this.selectStyle(rowData['syncop'],rowData['is_iintoo'])})
                 .append($('<td/>').text(rowData['firstName'  ]))
                 .append($('<td/>').text(rowData['lastName'   ]))
@@ -88,13 +88,13 @@ class LeadTable {
                 .append($('<td/>').text(rowData['campaign_ID']))
                 .append($('<td/>').text(rowData['device'     ]))
                 .append($('<td/>').text(rowData['language'   ]))
-            //    .append($('<td>').append($('<a/>').attr('href',rowData['sent_from']).text( rowData['sent_from'].substring(15, 41) + "...")))
+            //  .append($('<td>').append($('<a/>').attr('href',rowData['sent_from']).text( rowData['sent_from'].substring(15, 41) + "...")))
                 .append($('<td/>').text(rowData['sent_from']))
                 .append($('<td/>').text(rowData['is_iintoo'  ]))
                 .append($('<td/>').text(rowData['syncop'     ]))
                 .append($('<td/>').text(myDate.toDateString()));
                 table1.append(row);
-            }
+        //    }
         }.bind(this));
     }
 
