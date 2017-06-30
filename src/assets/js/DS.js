@@ -4,14 +4,15 @@
 class DS {
 
     constructor(amount=120){
-       console.log('DS'); 
-       faker.seed(123);
-       this.self=this;
-       this.data=this._getLeadData(amount);
+        this.amount=amount;
+        console.log('DS'); 
+        faker.seed(123);
+        this.self=this;
+        this.data=this._getLeadData();
     }
 
-    _getLeadData(amount) {
-
+    _getLeadData( startDate = new Date(2015, 1, 1), endDate = new Date() ) {
+        var amount=this.amount;
         var stub_data=[];
         var campaign = ["Ynet article","Calcalist article","Globes article","Taboola article"]
         for(var i=0;i<amount;i++){
@@ -50,6 +51,4 @@ class DS {
         }  
         return stub_data;
     }
-
-
 } 
