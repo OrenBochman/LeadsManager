@@ -35,10 +35,10 @@ leadHeaders:
  fieldName : language
  friendlyName : Language
  width : 60px
--
- fieldName : source
- friendlyName : sent from
- width : 230px
+#-
+# fieldName : source
+# friendlyName : sent from
+# width : 230px
 -
  fieldName : is_iintoo
  friendlyName : Processed

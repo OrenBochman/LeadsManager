@@ -8,7 +8,6 @@ class LeadTable {
         //self.rowsData=data;
         this._startDate = new Date(2016, 1, 1);
         this._endDate = new Date(2016, 12, 31);        
-        $("#csvButton").on( "click", this.genCSV);
         this._setUpUI(self._startDate,self._endDate);
     }
 
@@ -41,11 +40,14 @@ class LeadTable {
                 .append($('<td/>').text(lead['device'     ]))
                 .append($('<td/>').text(lead['language'   ]))
             //    .append($('<td>').append($('<a/>').attr('href',rowData['sent_from']).text( rowData['sent_from'].substring(15, 41) + "...")))
-                .append($('<td/>').text(lead['sent_from']))
+            //    .append($('<td/>').text(lead['sent_from']))
                 .append($('<td/>').text(lead['is_iintoo'  ]))
                 .append($('<td/>').text(lead['syncop'     ]))
                 .append($('<td/>').text(myDate.toDateString()));
                 table1.append(row);
+            }
+            else{
+            //    console.log(`rejected - lead date out of date range : ${myDate}`);
             }
         }.bind(this));
     }
@@ -62,26 +64,6 @@ class LeadTable {
         var sec = a.getSeconds();
         var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec;
         return time;
-    }
-    
-    genCSV(){
-        console.log("LeadTable.genCSV()");
-        var data = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
-        var csvContent = "data:text/csv;charset=utf-8,";
-        data.forEach(function(infoArray, index){
-            var dataString = infoArray.join(",");
-            csvContent += index < data.length ? dataString+ "\n" : dataString;
-
-        }); 
-    
-        //var encodedUri = encodeURI(csvContent);
-        //window.open(encodedUri);
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "my_data.csv");
-        document.body.appendChild(link); // Required for FF - but create an extra download per click
-        link.click(); // This will download the data file named "my_data.csv".
     }
 
     _setUpUI(_startDate,_endDate) {
@@ -112,6 +94,10 @@ class LeadTable {
 
         $('#startDate').fdatepicker().on('changeDate', this.startDateChanged );
         $('#endDate').fdatepicker().on('changeDate', this.endDateChanged);
+        $('#refreshButton').on('click', this.refreshData);
+        $('#addButton').on('click', this.AddLead);
+        $("#csvButton").on( 'click', this.genCSV);
+        
     }
 
     filterLeads(e){
@@ -130,7 +116,34 @@ class LeadTable {
 
     refreshData(e){
         console.info(`LeadTable:refreshData`);
-        ds._getLeadData(this._startDate,this._endDate);
-        controller.render();
+      //  ds._getLeadData(this._startDate,this._endDate);
+        ds.LeadGet(this._startDate,this._endDate);
+        //controller.render();
+    }
+
+    AddLead(e){
+        console.info(`LeadTable:refreshData`);
+      //  ds._getLeadData(this._startDate,this._endDate);
+        ds.LeadAdd(this._startDate,this._endDate);
+        //controller.render();
+    }
+
+    genCSV(e){
+        console.log("LeadTable.genCSV()");
+        var data = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
+        var csvContent = "data:text/csv;charset=utf-8,";
+        data.forEach(function(infoArray, index){
+            var dataString = infoArray.join(",");
+            csvContent += index < data.length ? dataString+ "\n" : dataString;
+        }); 
+    
+        //var encodedUri = encodeURI(csvContent);
+        //window.open(encodedUri);
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "my_data.csv");
+        document.body.appendChild(link); // Required for FF - but create an extra download per click
+        link.click(); // This will download the data file named "my_data.csv".
     }
 }
