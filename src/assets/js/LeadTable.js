@@ -118,32 +118,65 @@ class LeadTable {
         console.info(`LeadTable:refreshData`);
       //  ds._getLeadData(this._startDate,this._endDate);
         ds.LeadGet(this._startDate,this._endDate);
-        //controller.render();
     }
 
     AddLead(e){
-        console.info(`LeadTable:refreshData`);
+        console.info(`LeadTable:AddLead`);
       //  ds._getLeadData(this._startDate,this._endDate);
         ds.LeadAdd(this._startDate,this._endDate);
-        //controller.render();
     }
 
     genCSV(e){
         console.log("LeadTable.genCSV()");
-        var data = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
-        var csvContent = "data:text/csv;charset=utf-8,";
-        data.forEach(function(infoArray, index){
-            var dataString = infoArray.join(",");
-            csvContent += index < data.length ? dataString+ "\n" : dataString;
-        }); 
+        //var data = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
+        let csvheader=``;
+        $("#table1 thead th").each(function(index,element){          
+          let delimeter = index == 0 ? '' : ',';
+          let text =  $(this).text();          
+          csvheader = csvheader + `${delimeter}'${text}'`;
+        });
+        console.log(`csvheader: ${csvheader}`);
+        csvheader+=";";
+        
+        let csvbody=``;
+        $("#table1 tbody tr").each(function(rowIndex,rowElement){          
+                   
+            $(this).find('td').each(function(colIdx, colElement){            
+
+                let colDelimeter = colIdx == 0 ? '' : '\t';
+                let text =  $(this).text();          
+                csvbody += `${colDelimeter}'${text}'`;
+            });
+            csvbody +=";";
+
+        });
+        console.log(`csvbody: ${csvbody}`);
+
+        let csvContent = csvheader + csvbody;
+        // Content is the csv generated string above
     
-        //var encodedUri = encodeURI(csvContent);
-        //window.open(encodedUri);
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "my_data.csv");
-        document.body.appendChild(link); // Required for FF - but create an extra download per click
-        link.click(); // This will download the data file named "my_data.csv".
+        LeadTable.download(csvContent, 'dowload.csv', 'text/csv;encoding:utf-8');
+    }
+
+    static download(content, fileName, mimeType) {
+        console.log(`download`);
+        var a = document.createElement('a');
+        mimeType = mimeType || 'application/octet-stream';
+
+        if (navigator.msSaveBlob) { // IE10
+            navigator.msSaveBlob(new Blob([content], {
+            type: mimeType
+            }), fileName);
+        } else if (URL && 'download' in a) { //html5 A[download]
+            a.href = URL.createObjectURL(new Blob([content], {
+            type: mimeType
+            }));
+            a.setAttribute('download', fileName);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } else {
+            location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
+        }
     }
 }
