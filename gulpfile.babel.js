@@ -10,6 +10,8 @@ import sherpa   from 'style-sherpa';
 import yaml     from 'js-yaml';
 import fs       from 'fs';
 import mocha    from 'gulp-mocha';
+import jasmineBrowser from 'gulp-jasmine-browser';
+
 
 // Load all Gulp plugins into one variable
 const $ = plugins();

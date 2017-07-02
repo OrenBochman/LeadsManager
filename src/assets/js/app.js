@@ -6,28 +6,15 @@ $(document).foundation();
 
 var ds=new DS(); //data layer
 
-var controller;  //the page's controller
-
-function setPageModule(pageName)
-{
-  console.log("page loaded")
-
-  switch (pageName) {
-    case 'LeadForm':
-      console.log(pageName+" - controller loaded");
-      controller = new LeadForm();   
-      break;
-    case 'index':                
-      console.log(pageName+" - controller loaded")
-      controller = new LeadTable('table1',ds.data);    
-                                     
-      break;
-    default:
-      console.log(pageName+" - controller loaded")
-      break;
-  }      
+const setPageModule = (pageName) =>
+{       
+    console.log(`setPageModule: page : ${pageName}`);
+       switch (pageName) {
+           case 'index':                
+                controller = new LeadTable();    
+                controller.render(ds.data);                    
+                break;
+           default:
+               break;
+       }  
 }
-
-ds._initBackAnd();
-ds._getLeadData();
-//controller.renderRows(); 
