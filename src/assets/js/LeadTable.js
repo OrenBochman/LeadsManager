@@ -9,6 +9,12 @@ class LeadTable {
         this._startDate = new Date(2016, 1, 1);
         this._endDate = new Date(2016, 12, 31);        
         this._setUpUI(self._startDate,self._endDate);
+
+        //paging suuport
+        this._pageSize=10;
+        this._rows=1;
+        this._currentPage=1;
+        this._maxPage=1;
     }
 
     selectStyle(syncop,is_iintoo){
@@ -39,8 +45,8 @@ class LeadTable {
                 .append($('<td/>').text(lead['campaign_ID']))
                 .append($('<td/>').text(lead['device'     ]))
                 .append($('<td/>').text(lead['language'   ]))
-            //    .append($('<td>').append($('<a/>').attr('href',rowData['sent_from']).text( rowData['sent_from'].substring(15, 41) + "...")))
-            //    .append($('<td/>').text(lead['sent_from']))
+            //  .append($('<td>').append($('<a/>').attr('href',rowData['sent_from']).text( rowData['sent_from'].substring(15, 41) + "...")))
+            //  .append($('<td/>').text(lead['sent_from']))
                 .append($('<td/>').text(lead['is_iintoo'  ]))
                 .append($('<td/>').text(lead['syncop'     ]))
                 .append($('<td/>').text(myDate.toDateString()));
@@ -50,6 +56,54 @@ class LeadTable {
             //    console.log(`rejected - lead date out of date range : ${myDate}`);
             }
         }.bind(this));
+
+        this.genPagination();
+    }
+
+
+    genPagination(currPage=8,lastPage=20,){
+
+        //for page from first_page to last_page
+            //add <li><a> with onclick() with page#
+            //if page is  current page -3 or current page +3 set it to visible otherwise hide the li
+            //for first and last we have speciall classes
+            //for current page we have a special case -
+
+    let isStart = currPage==1;
+    let isEnd=   currPage==lastPage;      
+    let ul=  $(
+    `<ul class="pagination-pointed pagination text-center" role="navigation" aria-label="Pagination">
+        <li class="pagination-previous ${isStart ? "disabled" : "" }" >Previous <span class="show-for-sr">page</span></li>`);
+    
+    let rangeStart = Math.max(currPage-3,0);
+    let rangeEnd = Math.min(currPage+3,lastPage);
+    for(let i=1; i<lastPage;i++){
+
+        ul.append('<li>');
+        if(i==currPage){
+            //if the current page
+            ul.append(`<li class="current"><span class="show-for-sr">You're on page</span> ${i}</li>`);
+        }else if( i > rangeStart && i < rangeEnd){
+            //if in range
+            ul.append(`<li><a class="pagination-pointed-button" href="#" data-pagination-target="${i}" aria-label="Page ${i}">${i}</a></li>`);
+        }else if( (i === rangeStart && i >1) || (i === rangeEnd && i < lastPage-1) ){
+            ul.append(`<li class="ellipsis" aria-hidden="true"></li>`);
+        }else{
+            //if oout of range
+            ul.append(`<li class="hide"><a class="pagination-pointed-button " href="#" data-pagination-target="${i}" aria-label="Page ${i}">${i}</a></li>`);
+          
+        }   
+    }//for
+    ul.append(`<li class="pagination-next${isEnd?"disabled":""}"><a class="pagination-pointed-button"  href="#" data-pagination-target="next" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li></ul>`);
+
+      $("#pagination").append(ul);
+      $(".pagination-pointed-button").on('click',this.pagerHandler); 
+    }
+
+    pagerHandler (e){
+     console.log(`pagerHandler`);
+     console.log(e);
+     console.log(`clicked on: ${ e.target.getAttribute("data-pagination-target") }`);
     }
 
     static unx2data(unix_timestamp) {
@@ -148,7 +202,6 @@ class LeadTable {
                 csvbody += `${colDelimeter}'${text}'`;
             });
             csvbody +=";";
-
         });
         console.log(`csvbody: ${csvbody}`);
 

@@ -22,28 +22,86 @@ class DS {
         });        
     }
 
-    LeadGet(startDate,endDate){
-        console.log(`DS.LeadGet`)
+    LeadGet(startDate=1439251200,endDate=1481958865,pageSize=20,pageNumber=1){
+        console.log(`ds.LeadGet(${startDate},${endDate})`);        
         let params =  {
-        //    sort: backand.helpers.sort.create('creationDate', backand.helpers.sort.orders.desc),
-        //    exclude: backand.helpers.exclude.options.all,
-            pageSize: 10,
-            pageNumber: 1,
-        //    filter: backand.helpers.filter.create('completionDate', backand.helpers.filter.operators.date.empty, '')
+            startDate : startDate,   //1439251200
+            endDate   : endDate      //1481958865
         };
-        backand.object.getList('leads',params)
+
+        backand.query.post('getLeadCountByDates', params)
             .then((response) => {
-                console.log(response.data);  
-                this.data=response.data;
-                controller.render(response.data);
+                console.log(`BE.getLeadCountByDates()=${response.data[0].totalLeads}`);
+                this._totalLeads= response.data[0].totalLeads;
+                this._maxPage=Math.floor(this._totalLeads/pageSize);
+                this._LeadGetStep2(startDate=1439251200,endDate=1481958865,pageSize=20,pageNumber=1);
             })
             .catch(function(error){
                 console.log(error);     
             });
-        //this.data
-        //$('#B&_out').text=this.data;
-        
     }
+
+    _LeadGetStep2(startDate=1439251200, endDate=1481958865, pageSize=20, pageNumber=1){
+        console.log(`DS._LeadGetStep2(${startDate},${endDate},${pageSize},${pageNumber})`);   
+
+        let params =  {
+        //    sort: backand.helpers.sort.create('date', backand.helpers.sort.orders.desc),
+        //    exclude: backand.helpers.exclude.options.all,
+            startDate : startDate,   //1439251200
+            endDate   : endDate,     //1481958865
+            pageSize  : pageSize,    //5
+            pageNumber: pageNumber   //1
+        };
+        backand.query.post('getLeadsByDates', params)
+            .then((response) => {
+                console.log(`getLeadsByDates().response=`);
+                console.log(response);
+
+                //console.log(response.page);
+                //console.log(response.data);  
+                this.data=response.data;
+                controller.render(response.data); //add curr_page, max_page and max_rows 
+            })
+            .catch(function(error){
+                console.log(error);     
+            });
+    }
+
+
+    // LeadGetOld(startDate=1439251200,endDate=1481958865,page=1,pagesize=5){
+    //     console.log(`DS.LeadGet(${startDate},${endDate})`)
+    //     let params =  {
+    //         sort: backand.helpers.sort.create('date', backand.helpers.sort.orders.desc),
+    //     //    exclude: backand.helpers.exclude.options.all,
+    //         pageSize: 20,
+    //         pageNumber: 1,
+    //         filter: 
+    //         [                
+    //              {    
+    //                 "fieldName": "date",   
+    //                 "operator": "greaterThanOrEqualsTo",    
+    //                 "value": startDate 
+    //             },
+    //             {    
+    //                 "fieldName": "date",   
+    //                 "operator": "lessThan",    
+    //                 "value": endDate 
+    //             }                
+    //         ]
+    //     //    filter: backand.helpers.filter.create('completionDate', backand.helpers.filter.operators.date.empty, '')
+    //     };
+    //     backand.object.getList('leads',params)
+    //         .then((response) => {
+    //             console.log(response.data);  
+    //             this.data=response.data;
+    //             controller.render(response.data);
+    //         })
+    //         .catch(function(error){
+    //             console.log(error);     
+    //         });
+    //     //this.data
+    //     //$('#B&_out').text=this.data;     
+    // }
 
     LeadAdd(){
         
