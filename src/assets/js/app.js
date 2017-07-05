@@ -2,12 +2,10 @@
 'use strict';
 
 //globals
-var ds,controller, maxRows,pageSize,currentPager,isLoggedIn,loginToken;
-
+var pageName,ds,controller, maxRows,pageSize,currentPager,isLoggedIn,loginToken;
 
 $(document).foundation();
 console.log("app starting")
-ds=new DS(); //data layer
 
 
 //login start -- move this block to  
@@ -16,7 +14,10 @@ function loginHandler(e){
     //e.stopPropagation();
     e.preventDefault();
     isLoggedIn = !isLoggedIn; //todo - onlyflip is ds.loggin(user,pass) return token etc
-    loginToggleUI();
+    if(isLoggedIn){
+        loginToggleUI();
+        setPageModuleNext();
+    }
 }
 
 function loginToggleUI(){
@@ -31,20 +32,26 @@ function loginToggleUI(){
 }
 //login end
 
-const setPageModule = (pageName) => {       
-    console.log(`setPageModule: page : ${pageName}`);
+const setPageModule = (_pageName) => {       
+    
+    console.log(`setPageModule: page : ${_pageName}`);
+    pageName=_pageName;
+    ds=new DS(); //data layer
+
+
     //handle login
     isLoggedIn=false;
     loginToggleUI();
     $("#signInButton").on("click",loginHandler); 
     //end login
+}
+
+const setPageModuleNext = () => {       
 
     switch (pageName) {
         case 'index':                
             controller = new LeadTable();
-            ds.LeadGet(LeadTable._startDate,LeadTable._endDate); 
-                
-            //controller.render(ds.data);                    
+            controller.refreshData();                   
             break;
         default:
             break;

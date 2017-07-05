@@ -21,9 +21,24 @@ class DS {
             runSocket: false
         });        
     }
+    
+    //LeadGet(startDate=1439251200, endDate=1481958865, pageSize=20, pageNumber=1){
+   
+    LeadGet(startDate,endDate,pageSize,pageNumber){
 
-    LeadGet(startDate=1439251200,endDate=1481958865,pageSize=20,pageNumber=1){
-        console.log(`ds.LeadGet(${startDate},${endDate})`);        
+    console.log(`ds.LeadGet(${startDate},${endDate},${pageSize},${pageNumber})`);        
+
+        if (typeof startDate === 'object'){
+            console.log(`converting startDate`);
+            startDate=startDate.getTime();
+        }
+        if (typeof endDate === 'object'){
+            console.log(`converting endDate`);
+            endDate=endDate.getTime();
+
+        }
+
+        console.log(`ds.LeadGet(${startDate},${endDate},${pageSize},${pageNumber})`);        
         let params =  {
             startDate : startDate,   //1439251200
             endDate   : endDate      //1481958865
@@ -32,16 +47,17 @@ class DS {
         backand.query.post('getLeadCountByDates', params)
             .then((response) => {
                 console.log(`BE.getLeadCountByDates()=${response.data[0].totalLeads}`);
-                this._totalLeads= response.data[0].totalLeads;
-                this._maxPage=Math.floor(this._totalLeads/pageSize);
-                this._LeadGetStep2(startDate=1439251200,endDate=1481958865,pageSize=20,pageNumber=1);
+                controller._totalLeads= response.data[0].totalLeads;
+                controller._lastPage=Math.floor(this._totalLeads/pageSize);
+                this._LeadGetStep2(startDate,endDate,pageSize,pageNumber);
             })
             .catch(function(error){
                 console.log(error);     
             });
     }
+    // _LeadGetStep2(startDate=1439251200, endDate=1481958865, pageSize=20, pageNumber=1){
 
-    _LeadGetStep2(startDate=1439251200, endDate=1481958865, pageSize=20, pageNumber=1){
+    _LeadGetStep2(startDate, endDate, pageSize, pageNumber){
         console.log(`DS._LeadGetStep2(${startDate},${endDate},${pageSize},${pageNumber})`);   
 
         let params =  {
