@@ -8,7 +8,7 @@ class DS {
         faker.seed(123);        
         this.BAInit();
 
-        this.data=this._getLeadData();
+        //this.data=this._getLeadData();
         console.log(`DS ctor end`); 
     }
 
@@ -54,7 +54,9 @@ class DS {
             .then((response) => {
                 console.log(`BE.getLeadCountByDates()=${response.data[0].totalLeads}`);
                 controller._totalLeads= response.data[0].totalLeads;
-                controller._lastPage=Math.floor(this._totalLeads/pageSize);
+                controller._lastPage=Math.floor(controller._totalLeads/pageSize);
+                console.log(`ds.LeadGet(_totalLeads,${controller._totalLeads})`);        
+                console.log(`ds.LeadGet(_lastPage,${controller._lastPage})`);  
                 this._LeadGetStep2(startDate,endDate,pageSize,pageNumber);
             })
             .catch(function(error){
@@ -132,7 +134,7 @@ class DS {
         //   pageNumber: 1
         };
         
-        let datum = this.data[faker.random.number()%120];
+        let datum = this._leadGen();
          
         //let params = {};
         console.log(datum);
@@ -146,25 +148,20 @@ class DS {
             });
     }
 
-    _getLeadData( startDate = new Date(2015, 1, 1), endDate = new Date() ) {
-        var amount=this.amount;
-        var stub_data=[];
-        var campaign = ["Ynet article","Calcalist article","Globes article","Taboola article"]
-        for(var i=0;i<amount;i++){
+    _leadGen(startDate = new Date(2016, 0, 1), endDate =startDate = new Date(2016, 11, 1)){
+            let syncop=faker.random.number() % 4;
+            let fname=faker.name.firstName();
+            let lname=faker.name.lastName();
+            let campaign = ["Ynet article","Calcalist article","Globes article","Taboola article"]            
 
-            //var syncop=Math.floor(Math.random() * (4 - 0)) + 0;
-            let syncop=faker.random.number() % 4;// Math.floor(Math.random() * (4 - 0)) + 0;
-            let fname=faker.name.firstName();//randomName.split(" ")[0];
-            let lname=faker.name.lastName();//randomName.split(" ")[1];
-                    
             var datum = {
                 ad_ID       : faker.random.number() % 2 >0 ? "Onepager Prime" : "Onepager Shark",
-                campaign_ID : campaign[faker.random.number() % 4],
-                date        : Math.floor(Math.random() * (1497324083 - 1465832406)) + 1465832406,
+                campaign_ID : campaign[faker.random.number() % 5],
+                date        : faker.random.number({'min': startDate.getTime()/1000 , 'max': endDate.getTime()/1000}),
                 device      : "desktop",
                 email       : faker.internet.email(`${fname} ${lname}`),
                 firstName   : fname,
-                id          : 1000+i,
+                id          : faker.random.number() % 1000,
                 is_iintoo   : syncop>0 ? false: true,
                 language    : "en",
                 lastName    : lname,
@@ -174,10 +171,17 @@ class DS {
                 sent_from   : "http://invest.iintoo.com/onepager-prime/?utm_source=ynet&utm_medium=link&utm_campaign=ynetOnepagerPrime&campaignID=Ynet_article&adID=OnepagerPrime#form",
                 syncop      : syncop
             };
+        
+        return datum;
 
-            stub_data.push(datum);            
-        }  
-        this.data=stub_data;
+    }
+
+    _getLeadData(startDate = new Date(2016, 0, 1), endDate =startDate = new Date(2016, 11, 1),amount){
+
+        var stub_data=[];        
+        for(var i=0;i<amount;i++)
+            stub_data.push(_leadGen(startDate,endDate));        
         return stub_data;
+
     }
 } 

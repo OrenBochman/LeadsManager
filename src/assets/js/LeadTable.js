@@ -4,8 +4,6 @@
 
 class LeadTable {
 
-    
-
     constructor() {
         console.log('LeadTable');
         this.self=this;
@@ -76,13 +74,13 @@ class LeadTable {
 
         let rangeStart = Math.max(currPage - 3, 0);
         let rangeEnd = Math.min(currPage + 3, lastPage);
-        for (let i = 1; i < lastPage; i++) {
+        for (let i = 1; i <= lastPage; i++) {
 
             ul.append('<li>');
             if (i == currPage) {
                 //if the current page
                 ul.append(`<li class="current"><span class="show-for-sr">You're on page</span> ${i}</li>`);
-            } else if (i > rangeStart && i < rangeEnd) {
+            } else if (i > rangeStart && i <= rangeEnd) {
                 //if in range
                 ul.append(`<li><a class="pagination-pointed-button" href="#" data-pagination-target="${i}" aria-label="Page ${i}">${i}</a></li>`);
             } else if ((i === rangeStart && i > 1) || (i === rangeEnd && i < lastPage - 1)) {
@@ -96,9 +94,7 @@ class LeadTable {
         ul.append(`<li class="pagination-next${isEnd ? "disabled" : ""}"><a class="pagination-pointed-button"  href="#" data-pagination-target="next" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li></ul>`);
 
         $("#pagination").append(ul);
-        $(".pagination-pointed-button").click( $.proxy(this.pagerHandler,this) );
-                
-
+        $(".pagination-pointed-button").click( $.proxy(this.pagerHandler,this) );            
     }
 
 
@@ -147,8 +143,8 @@ class LeadTable {
             closeButton: true
         });
 
-        $('#startDate').fdatepicker().on('changeDate', this.startDateChanged);
-        $('#endDate').fdatepicker().on('changeDate', this.endDateChanged); 
+        $('#startDate').fdatepicker().on('changeDate', $.proxy(this.startDateChanged,this));
+        $('#endDate').fdatepicker().on('changeDate', $.proxy(this.endDateChanged,this)); 
         $('#addButton').click(this.AddLead);
         $("#csvButton").click(this.genCSV);
         $('#refreshButton').click( $.proxy(this.refreshData,this) );
