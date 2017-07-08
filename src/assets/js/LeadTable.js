@@ -3,18 +3,21 @@
 'use strict';
 
 class LeadTable {
+
+    
+
     constructor() {
         console.log('LeadTable');
-        //self.rowsData=data;
+        this.self=this;
         this._startDate = new Date(2016, 0, 1);
         this._endDate = new Date(2016, 11, 31);
-        this._setUpUI();
-
         //paging support
         this._pageSize = 10;
         this._currentPage = 1;
         this._totalLeads = 1;
         this._lastPage = 1;
+
+        this._setUpUI();
     }
 
     selectStyle(syncop, is_iintoo) {
@@ -56,11 +59,15 @@ class LeadTable {
             }
         }.bind(this));
 
-        this.genPagination(this.currentPage, this.lastPage);
+        this.genPagination(this._currentPage, this._lastPage);
     }
 
     genPagination(currPage, lastPage) {
         console.log(`LeadTable.genPagination(${currPage},${lastPage})`);
+
+        if(this._lastPage===1) return;
+
+        $("#pagination ul").remove();        
         let isStart = currPage == 1;
         let isEnd = currPage == lastPage;
         let ul = $(
@@ -89,7 +96,9 @@ class LeadTable {
         ul.append(`<li class="pagination-next${isEnd ? "disabled" : ""}"><a class="pagination-pointed-button"  href="#" data-pagination-target="next" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li></ul>`);
 
         $("#pagination").append(ul);
-        $(".pagination-pointed-button").on('click', this.pagerHandler);
+        $(".pagination-pointed-button").click( $.proxy(this.pagerHandler,this) );
+                
+
     }
 
 
@@ -114,10 +123,9 @@ class LeadTable {
         let _startDate = this._startDate;
         let _endDate = this._endDate;
 
-
         $('#checkbox1').on('change', { toggler: ".leadGood" }, this.filterLeads);
         $('#checkbox2').on('change', { toggler: ".leadFail" }, this.filterLeads);
-        $('#checkbox3').on('change', { toggler: ".leadBad" }, this.filterLeads);
+        $('#checkbox3').on('change', { toggler: ".leadBad" },  this.filterLeads);
 
         $('#startDate').fdatepicker({
             initialDate: _startDate,
@@ -140,11 +148,10 @@ class LeadTable {
         });
 
         $('#startDate').fdatepicker().on('changeDate', this.startDateChanged);
-        $('#endDate').fdatepicker().on('changeDate', this.endDateChanged);
-        $('#refreshButton').on('click', this.refreshData);
-        $('#addButton').on('click', this.AddLead);
-        $("#csvButton").on('click', this.genCSV);
-
+        $('#endDate').fdatepicker().on('changeDate', this.endDateChanged); 
+        $('#addButton').click(this.AddLead);
+        $("#csvButton").click(this.genCSV);
+        $('#refreshButton').click( $.proxy(this.refreshData,this) );
     }
 
     filterLeads(e) {
@@ -163,17 +170,15 @@ class LeadTable {
 
     refreshData(e) {
         console.info(`LeadTable:refreshData`);
-        //  ds._getLeadData(this._startDate,this._endDate);
         ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
     }
 
-    pagerHandler(e) {
+    pagerHandler (e){
         console.log(`pagerHandler`);
-        console.log(e);
-        console.log(`clicked on: ${e.target.getAttribute("data-pagination-target")}`);
+        //console.log(`clicked on: ${e.target.getAttribute("data-pagination-target")}`);
         let currentPage = e.target.getAttribute("data-pagination-target");
-        switch (this._currentPage) {
-            case 'next':
+        switch (currentPage) {
+            case 'next':                
                 this._currentPage = this._currentPage + 1;
                 ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
                 break;

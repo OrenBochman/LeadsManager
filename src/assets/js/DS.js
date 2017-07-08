@@ -12,7 +12,10 @@ class DS {
         console.log(`DS ctor end`); 
     }
 
-
+    /**
+     * initilize backand sdk.
+     * 
+     */
     BAInit(){
 
         backand.init({
@@ -21,8 +24,12 @@ class DS {
             runSocket: false
         });        
     }
-    
-    //LeadGet(startDate=1439251200, endDate=1481958865, pageSize=20, pageNumber=1){
+       
+    // test with :
+    //startDate=1439251200,
+    // endDate=1481958865,
+    // pageSize=20,
+    // pageNumber=1
    
     LeadGet(startDate,endDate,pageSize,pageNumber){
 
@@ -30,12 +37,11 @@ class DS {
 
         if (typeof startDate === 'object'){
             console.log(`converting startDate`);
-            startDate=startDate.getTime();
+            startDate=startDate.getTime()/1000;
         }
         if (typeof endDate === 'object'){
-            console.log(`converting endDate`);
+            console.log(`converting endDate`)/1000;
             endDate=endDate.getTime();
-
         }
 
         console.log(`ds.LeadGet(${startDate},${endDate},${pageSize},${pageNumber})`);        
@@ -147,22 +153,16 @@ class DS {
         for(var i=0;i<amount;i++){
 
             //var syncop=Math.floor(Math.random() * (4 - 0)) + 0;
-            var syncop=faker.random.number() % 4;// Math.floor(Math.random() * (4 - 0)) + 0;
-            var fname=faker.name.firstName();//randomName.split(" ")[0];
-            var lname=faker.name.lastName();//randomName.split(" ")[1];
-            //var randomName  =  ; // Caitlyn Kerluke
-            var randomEmail = faker.internet.email(`${fname} ${lname}`); // Rusty@arne.info
-            var randomPhone= faker.phone.phoneNumber();            
-            var randomDate= Math.floor(Math.random() * (1497324083 - 1465832406)) + 1465832406;
-            var ad_ID = faker.random.number() % 2 >0 ? "Onepager Prime" : "Onepager Shark";
-            var campaign_ID = campaign[faker.random.number() % 4];
+            let syncop=faker.random.number() % 4;// Math.floor(Math.random() * (4 - 0)) + 0;
+            let fname=faker.name.firstName();//randomName.split(" ")[0];
+            let lname=faker.name.lastName();//randomName.split(" ")[1];
                     
             var datum = {
-                ad_ID       : ad_ID,
-                campaign_ID : campaign_ID,
-                date        : randomDate,
+                ad_ID       : faker.random.number() % 2 >0 ? "Onepager Prime" : "Onepager Shark",
+                campaign_ID : campaign[faker.random.number() % 4],
+                date        : Math.floor(Math.random() * (1497324083 - 1465832406)) + 1465832406,
                 device      : "desktop",
-                email       : randomEmail,
+                email       : faker.internet.email(`${fname} ${lname}`),
                 firstName   : fname,
                 id          : 1000+i,
                 is_iintoo   : syncop>0 ? false: true,
@@ -170,7 +170,7 @@ class DS {
                 lastName    : lname,
                 newsletter  : faker.random.boolean(),
                 password    : "ASAF1976",
-                phone       : randomPhone,
+                phone       : faker.phone.phoneNumber(),
                 sent_from   : "http://invest.iintoo.com/onepager-prime/?utm_source=ynet&utm_medium=link&utm_campaign=ynetOnepagerPrime&campaignID=Ynet_article&adID=OnepagerPrime#form",
                 syncop      : syncop
             };
