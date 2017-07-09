@@ -1,6 +1,5 @@
 
 // Whole-script strict mode syntax
-'use strict';
 
 class LeadTable {
 
@@ -60,22 +59,42 @@ class LeadTable {
         this.genPagination(this._currentPage, this._lastPage);
     }
 
-    genPagination(currPage, lastPage) {
+
+    /**
+     * Generate a pagination elements dynamicaly.
+     * 
+     * The previous page button is active unless current page is page 1
+     * The last page button is active unless current page it is last page
+     * also an inactive previous pages or next page has a square tip while
+     * an active one has a pointy tip
+     * 
+     * The current page is always visible but disabled
+     * 
+     * The three pages before and after are the currentpage are the visible range
+     * and they are visible and active if they exist.
+     * 
+     * To indicate more pages we can also show elipsis if there are pages 
+     * above and bellow the visible range.
+     * 
+     * if there is just one page we don't show the navigation
+     * 
+     * @param {number} currPage 
+     * @param {number} lastPage 
+     */
+    genPagination (currPage , lastPage ) {
         console.log(`LeadTable.genPagination(${currPage},${lastPage})`);
-
         if(this._lastPage===1) return;
-
         $("#pagination ul").remove();        
-        let isStart = currPage == 1;
-        let isEnd = currPage == lastPage;
-        let ul = $(
-            `<ul class="pagination-pointed pagination text-center" role="navigation" aria-label="Pagination">
-            <li class="pagination-previous ${isStart ? "disabled" : ""}" >Previous <span class="show-for-sr">page</span></li>`);
-
+        let isStart = currPage == 0;
+        let isEnd   = currPage == lastPage;
+        let ul = $(`<ul class="pagination-pointed pagination text-center" role="navigation" aria-label="Pagination">`)
+            .append(`<li class="pagination-previous ${isStart ? 'disabled' : ''}" >`)
+            .append(`<a class="pagination-pointed-button" href="#" data-pagination-target="prev" aria-label="Previous page">Previous</a>`)
+            .append(` <span class="show-for-sr">page</span>`)
+            .append(`</li>`);
         let rangeStart = Math.max(currPage - 3, 0);
         let rangeEnd = Math.min(currPage + 3, lastPage);
-        for (let i = 1; i <= lastPage; i++) {
-
+        for (let i = 0; i <= lastPage; i++) {
             ul.append('<li>');
             if (i == currPage) {
                 //if the current page
@@ -87,17 +106,15 @@ class LeadTable {
                 ul.append(`<li class="ellipsis" aria-hidden="true"></li>`);
             } else {
                 //if oout of range
-                ul.append(`<li class="hide"><a class="pagination-pointed-button " href="#" data-pagination-target="${i}" aria-label="Page ${i}">${i}</a></li>`);
-
+             //   ul.append(`<li class="hide"><a class="pagination-pointed-button " href="#" data-pagination-target="${i}" aria-label="Page ${i}">${i}</a></li>`);
             }
         }//for
-        ul.append(`<li class="pagination-next${isEnd ? "disabled" : ""}"><a class="pagination-pointed-button"  href="#" data-pagination-target="next" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li></ul>`);
-
+        ul.append(`<li class="pagination-next ${isEnd ? 'disabled' : '' } ">
+                    <a class="pagination-pointed-button"  href="#" data-pagination-target="next" aria-label="Next page">Next <span class="show-for-sr">page</span>
+                    </a></li></ul>`);
         $("#pagination").append(ul);
         $(".pagination-pointed-button").click( $.proxy(this.pagerHandler,this) );            
     }
-
-
 
     static unx2data(unix_timestamp) {
 
@@ -145,7 +162,7 @@ class LeadTable {
 
         $('#startDate').fdatepicker().on('changeDate', $.proxy(this.startDateChanged,this));
         $('#endDate').fdatepicker().on('changeDate', $.proxy(this.endDateChanged,this)); 
-        $('#addButton').click(this.AddLead);
+        $('#addButton').click(this.addLead);
         $("#csvButton").click(this.genCSV);
         $('#refreshButton').click( $.proxy(this.refreshData,this) );
     }
@@ -178,7 +195,7 @@ class LeadTable {
                 this._currentPage = this._currentPage + 1;
                 ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
                 break;
-            case 'previous':
+            case 'prev':
                 this._currentPage = this._currentPage - 1;
                 ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
                 break;
@@ -189,7 +206,7 @@ class LeadTable {
 
     }
 
-    AddLead(e) {
+    addLead(e) {
         console.info(`LeadTable:AddLead`);
         //  ds._getLeadData(this._startDate,this._endDate);
         ds.LeadAdd(this._startDate, this._endDate);
