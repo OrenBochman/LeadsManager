@@ -5,7 +5,7 @@ class LeadTable {
 
     constructor() {
         console.log('LeadTable');
-        this.self=this;
+        this.self = this;
         this._startDate = new Date(2016, 0, 1);
         this._endDate = new Date(2016, 11, 31);
         //paging support
@@ -13,7 +13,7 @@ class LeadTable {
         this._currentPage = 1;
         this._totalLeads = 1;
         this._lastPage = 1;
-
+        this._isLoggedIn = false;
         this._setUpUI();
     }
 
@@ -60,67 +60,6 @@ class LeadTable {
     }
 
 
-    /**
-     * Generate a pagination elements dynamicaly.
-     * 
-     * The previous page button is active unless current page is page 1
-     * The last page button is active unless current page it is last page
-     * also an inactive previous pages or next page has a square tip while
-     * an active one has a pointy tip
-     * 
-     * The current page is always visible but disabled
-     * 
-     * The three pages before and after are the currentpage are the visible range
-     * and they are visible and active if they exist.
-     * 
-     * To indicate more pages we can also show elipsis if there are pages 
-     * above and bellow the visible range.
-     * 
-     * if there is just one page we don't show the navigation
-     * 
-     * @param {number} currPage 
-     * @param {number} lastPage 
-     */
-    genPagination (currPage , lastPage ) {
-        if(typeof(currPage) == "string"){ 
-            currPage = parseInt(currPage);
-        }
-        if(typeof(lastPage) == "string"){ 
-            lastPage = parseInt(lastPage);
-        }
-
-        console.log(`LeadTable.genPagination(${currPage},${lastPage})`);
-        if(this._lastPage===1) return;
-        $("#pagination ul").remove();        
-        let isStart = currPage == 0;
-        let isEnd   = currPage == lastPage;
-        let ul = $(`<ul class="pagination-pointed pagination text-center" role="navigation" aria-label="Pagination">`)
-            .append(`<li class=" ${isStart ? 'disabled' : ''}" >`)
-            .append(`<a class="pagination-previous" href="#" data-pagination-target="prev" aria-label="Previous page">Previous</a>`)
-            .append(` <span class="show-for-sr">page</span>`)
-            .append(`</li>`);
-        let rangeStart = Math.max(currPage - 4, 0);
-        let rangeEnd = Math.min(currPage + 3, lastPage);
-        for (let i = 0; i <= lastPage; i++) {
-            ul.append('<li>');
-            if (i == currPage) {
-                //if the current page
-                ul.append(`<li class="current"><span class="show-for-sr">You're on page</span> ${i}</li>`);
-                continue;
-            } else if (i > rangeStart && i <= rangeEnd) {
-                //if in range
-                ul.append(`<li><a class="pagination-pointed-button" href="#" data-pagination-target="${i}" aria-label="Page ${i}">${i}</a></li>`);                
-            }
-        }//for
-        ul.append(`<li class="pagination-next ${isEnd ? 'disabled' : '' } ">
-                    <a class="pagination-pointed-button"  href="#" data-pagination-target="next" aria-label="Next page">Next <span class="show-for-sr">page</span>
-                    </a></li></ul>`);
-        $("#pagination").append(ul);
-        $(".pagination-pointed-button").click( $.proxy(this.pagerHandler,this) );                    
-        $(".pagination-pointed-previous").click( $.proxy(this.pagerPrevHandler,this) );
-        $(".pagination-pointed-next").click( $.proxy(this.pagerNextHandler,this) );            
-}
-
     static unx2data(unix_timestamp) {
 
         var a = new Date(unix_timestamp * 1000);
@@ -143,7 +82,7 @@ class LeadTable {
 
         $('#checkbox1').on('change', { toggler: ".leadGood" }, this.filterLeads);
         $('#checkbox2').on('change', { toggler: ".leadFail" }, this.filterLeads);
-        $('#checkbox3').on('change', { toggler: ".leadBad" },  this.filterLeads);
+        $('#checkbox3').on('change', { toggler: ".leadBad" }, this.filterLeads);
 
         $('#startDate').fdatepicker({
             initialDate: _startDate,
@@ -165,11 +104,13 @@ class LeadTable {
             closeButton: true
         });
 
-        $('#startDate').fdatepicker().on('changeDate', $.proxy(this.startDateChanged,this));
-        $('#endDate').fdatepicker().on('changeDate', $.proxy(this.endDateChanged,this)); 
+        $('#startDate').fdatepicker().on('changeDate', $.proxy(this.startDateChanged, this));
+        $('#endDate').fdatepicker().on('changeDate', $.proxy(this.endDateChanged, this));
         $('#addButton').click(this.addLead);
         $("#csvButton").click(this.genCSV);
-        $('#refreshButton').click( $.proxy(this.refreshData,this) );
+        $('#refreshButton').click($.proxy(this.refreshData, this));
+        $("#signInButton").on("click", this.loginHandler);
+
     }
 
     filterLeads(e) {
@@ -191,31 +132,17 @@ class LeadTable {
         ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
     }
 
-    pagernextHandler(e){             
-        this._currentPage = this._currentPage + 1;
-        ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
-    };
-
-    pagerPrevHandler(e){
-        this._currentPage = this._currentPage - 1;
-        ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
-    };
-           
-
-    pagerHandler (e){
-        console.log(`pagerHandler`);
-        //console.log(`clicked on: ${e.target.getAttribute("data-pagination-target")}`);
-        let currentPage = e.target.getAttribute("data-pagination-target");
-        this._currentPage = currentPage;
-        ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
-    }
-
     addLead(e) {
         console.info(`LeadTable:AddLead`);
         //  ds._getLeadData(this._startDate,this._endDate);
         ds.LeadAdd(this._startDate, this._endDate);
     }
-
+    //start CSV generation
+    /**
+     * handle for the CSV generation button click event
+     * 
+     * @param {*} e the event
+     */
     genCSV(e) {
         console.log("LeadTable.genCSV()");
         //var data = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
@@ -268,4 +195,117 @@ class LeadTable {
             location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
         }
     }
+    //end csv generaion
+
+    //login start
+
+    /**
+     * The enrty point when user signs in.
+     *  
+     */
+    signIn() {
+        controller.loginToggleUI();
+        controller.refreshData();
+    }
+
+    loginHandler(e) {
+        console.log("loginHandler()");
+        //e.stopPropagation();
+        e.preventDefault();
+        let username = $("#sign-in-form-username").val();
+        let password = $("#sign-in-form-password").val();
+        ds.BASignIn(username, password);
+
+    }
+
+    loginToggleUI() {
+
+        if (controller._isLoggedIn) {
+            $("#login").hide();
+            $("#content").show();
+        } else {
+            $("#login").show();
+            $("#content").hide();
+        }
+    }
+    //login end
+
+    //pagination start
+
+
+    /**
+     * Generate a pagination elements dynamicaly.
+     * 
+     * The previous page button is active unless current page is page 1
+     * The last page button is active unless current page it is last page
+     * also an inactive previous pages or next page has a square tip while
+     * an active one has a pointy tip
+     * 
+     * The current page is always visible but disabled
+     * 
+     * The three pages before and after are the currentpage are the visible range
+     * and they are visible and active if they exist.
+     * 
+     * To indicate more pages we can also show elipsis if there are pages 
+     * above and bellow the visible range.
+     * 
+     * if there is just one page we don't show the navigation
+     * 
+     * @param {number} currPage - the current page
+     * @param {number} lastPage - the last page
+     */
+    genPagination(currPage, lastPage) {
+        if (typeof (currPage) == "string") {
+            currPage = parseInt(currPage);
+        }
+        if (typeof (lastPage) == "string") {
+            lastPage = parseInt(lastPage);
+        }
+
+        console.log(`LeadTable.genPagination(${currPage},${lastPage})`);
+        if (this._lastPage === 1) return;
+        $("#pagination ul").remove();
+        let isStart = currPage == 0;
+        let isEnd = currPage == lastPage;
+        let ul = $(`<ul class="pagination-pointed pagination text-center" role="navigation" aria-label="Pagination">`)
+            .append(`<li>`)
+            .append(`<a class="pagination-pointed-button ${isStart ? 'disabled' : ''}" href="#" data-pagination-target="prev" aria-label="Previous page">Previous</a>`)
+            .append(` <span class="show-for-sr">page</span>`)
+            .append(`</li>`);
+        let rangeStart = Math.max(currPage - 4, 0);
+        let rangeEnd = Math.min(currPage + 3, lastPage);
+        for (let i = 0; i <= lastPage; i++) {
+            ul.append('<li>');
+            if (i == currPage) {
+                //if the current page
+                ul.append(`<li class="current"><span class="show-for-sr">You're on page</span> ${i}</li>`);
+                continue;
+            } else if (i > rangeStart && i <= rangeEnd) {
+                //if in range
+                ul.append(`<li><a class="pagination-pointed-button" href="#" data-pagination-target="${i}" aria-label="Page ${i}">${i}</a></li>`);
+            }
+        }//for
+        ul.append(`<li><a class="pagination-pointed-button ${isEnd ? 'disabled' : ''}"  href="#" data-pagination-target="next" aria-label="Next page">Next <span class="show-for-sr">page</span>
+                    </a></li></ul>`);
+        $("#pagination").append(ul);
+        $(".pagination-pointed-button").click($.proxy(this.pagerHandler, this));
+    }
+
+    /**
+     * handler for nexr perviious and numbered pages events
+     * 
+     * @param {*} e pagination event 
+     */
+    pagerHandler(e) {
+        console.log(`pagerHandler`);
+        //console.log(`clicked on: ${e.target.getAttribute("data-pagination-target")}`);
+        let target = e.target.getAttribute("data-pagination-target");
+        if (target === "next") this._currentPage === this._lastPage ? this._currentPage :   this._currentPage++;
+        else if (target === "prev") this._currentPage === 0 ? this._currentPage :  this._currentPage--;
+        else this._currentPage = parseInt(target);
+
+        ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
+    }
+
+    //pagination end
 }

@@ -24,7 +24,27 @@ class DS {
             runSocket: false
         });        
     }
-       
+    
+    
+    BASignIn(username,password){
+
+        backand.signin(username, password)
+            .then(res => {
+                console.log('signin succeeded with user:' + res.data.username);
+                console.log(res);
+
+                controller._isLoggedIn=true;
+                controller.signIn();
+
+
+            })
+            .catch(err => {
+                console.log(err);
+                controller._isLoggedIn=false;
+            });
+
+    }
+
     // test with :
     //startDate=1439251200,
     // endDate=1481958865,
@@ -139,7 +159,6 @@ class DS {
         //let params = {};
         console.log(datum);
         backand.object.action.post('leads','registerLead',datum,params)
-//        {"text":text,"creationDate":new Date()})
             .then((response) => {
                 console.log(response); 
             })
