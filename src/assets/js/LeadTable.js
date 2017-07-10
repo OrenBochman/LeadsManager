@@ -82,39 +82,44 @@ class LeadTable {
      * @param {number} lastPage 
      */
     genPagination (currPage , lastPage ) {
+        if(typeof(currPage) == "string"){ 
+            currPage = parseInt(currPage);
+        }
+        if(typeof(lastPage) == "string"){ 
+            lastPage = parseInt(lastPage);
+        }
+
         console.log(`LeadTable.genPagination(${currPage},${lastPage})`);
         if(this._lastPage===1) return;
         $("#pagination ul").remove();        
         let isStart = currPage == 0;
         let isEnd   = currPage == lastPage;
         let ul = $(`<ul class="pagination-pointed pagination text-center" role="navigation" aria-label="Pagination">`)
-            .append(`<li class="pagination-previous ${isStart ? 'disabled' : ''}" >`)
-            .append(`<a class="pagination-pointed-button" href="#" data-pagination-target="prev" aria-label="Previous page">Previous</a>`)
+            .append(`<li class=" ${isStart ? 'disabled' : ''}" >`)
+            .append(`<a class="pagination-previous" href="#" data-pagination-target="prev" aria-label="Previous page">Previous</a>`)
             .append(` <span class="show-for-sr">page</span>`)
             .append(`</li>`);
-        let rangeStart = Math.max(currPage - 3, 0);
+        let rangeStart = Math.max(currPage - 4, 0);
         let rangeEnd = Math.min(currPage + 3, lastPage);
         for (let i = 0; i <= lastPage; i++) {
             ul.append('<li>');
             if (i == currPage) {
                 //if the current page
                 ul.append(`<li class="current"><span class="show-for-sr">You're on page</span> ${i}</li>`);
+                continue;
             } else if (i > rangeStart && i <= rangeEnd) {
                 //if in range
-                ul.append(`<li><a class="pagination-pointed-button" href="#" data-pagination-target="${i}" aria-label="Page ${i}">${i}</a></li>`);
-            } else if ((i === rangeStart && i > 1) || (i === rangeEnd && i < lastPage - 1)) {
-                ul.append(`<li class="ellipsis" aria-hidden="true"></li>`);
-            } else {
-                //if oout of range
-             //   ul.append(`<li class="hide"><a class="pagination-pointed-button " href="#" data-pagination-target="${i}" aria-label="Page ${i}">${i}</a></li>`);
+                ul.append(`<li><a class="pagination-pointed-button" href="#" data-pagination-target="${i}" aria-label="Page ${i}">${i}</a></li>`);                
             }
         }//for
         ul.append(`<li class="pagination-next ${isEnd ? 'disabled' : '' } ">
                     <a class="pagination-pointed-button"  href="#" data-pagination-target="next" aria-label="Next page">Next <span class="show-for-sr">page</span>
                     </a></li></ul>`);
         $("#pagination").append(ul);
-        $(".pagination-pointed-button").click( $.proxy(this.pagerHandler,this) );            
-    }
+        $(".pagination-pointed-button").click( $.proxy(this.pagerHandler,this) );                    
+        $(".pagination-pointed-previous").click( $.proxy(this.pagerPrevHandler,this) );
+        $(".pagination-pointed-next").click( $.proxy(this.pagerNextHandler,this) );            
+}
 
     static unx2data(unix_timestamp) {
 
@@ -186,24 +191,23 @@ class LeadTable {
         ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
     }
 
+    pagernextHandler(e){             
+        this._currentPage = this._currentPage + 1;
+        ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
+    };
+
+    pagerPrevHandler(e){
+        this._currentPage = this._currentPage - 1;
+        ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
+    };
+           
+
     pagerHandler (e){
         console.log(`pagerHandler`);
         //console.log(`clicked on: ${e.target.getAttribute("data-pagination-target")}`);
         let currentPage = e.target.getAttribute("data-pagination-target");
-        switch (currentPage) {
-            case 'next':                
-                this._currentPage = this._currentPage + 1;
-                ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
-                break;
-            case 'prev':
-                this._currentPage = this._currentPage - 1;
-                ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
-                break;
-            default:
-                this._currentPage = currentPage;
-                ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
-        }
-
+        this._currentPage = currentPage;
+        ds.LeadGet(this._startDate, this._endDate, this._pageSize, this._currentPage);
     }
 
     addLead(e) {
