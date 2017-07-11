@@ -1,0 +1,52 @@
+ 
+ {
+    "name": "leads",
+    "fields": {
+      "email": {
+        "type": "string"
+      },
+      "firstName": {
+        "type": "string"
+      },
+      "lastName": {
+        "type": "string"
+      },
+      "password": {
+        "type": "string"
+      },
+      "newsletter": {
+        "type": "boolean"
+      },
+      "ad_ID": {
+        "type": "string",
+        "defaultValue": "Atomi-Default"
+      },
+      "campaign_ID": {
+        "type": "string",
+        "defaultValue": "Atomi-Default"
+      },
+      "phone": {
+        "type": "string"
+      },
+      "is_iintoo": {
+        "type": "boolean",
+        "defaultValue": false
+      },
+      "syncop": {
+        "type": "float",
+        "defaultValue": 0
+      },
+      "language": {
+        "type": "string"
+      },
+      "date": {
+        "type": "float"
+      },
+      "device": {
+        "type": "string"
+      },
+      "sent_from": {
+        "type": "string"
+      }
+    }
+  }

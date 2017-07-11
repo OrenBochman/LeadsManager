@@ -10,10 +10,10 @@ class LeadTable {
         this._endDate = new Date(2016, 11, 31);
         //paging support
         this._pageSize = 10;
-        this._currentPage = 1;
+        this._currentPage = 0;
         this._totalLeads = 1;
-        this._lastPage = 1;
-        this._isLoggedIn = false;
+        this._lastPage = 0;
+       // this._isLoggedIn = false;
         this._setUpUI();
     }
 
@@ -109,7 +109,7 @@ class LeadTable {
         $('#addButton').click(this.addLead);
         $("#csvButton").click(this.genCSV);
         $('#refreshButton').click($.proxy(this.refreshData, this));
-        $("#signInButton").on("click", this.loginHandler);
+        $("#sign-in-form-button").on("click", this.loginHandler);
 
     }
 
@@ -197,41 +197,7 @@ class LeadTable {
     }
     //end csv generaion
 
-    //login start
-
-    /**
-     * The enrty point when user signs in.
-     *  
-     */
-    signIn() {
-        controller.loginToggleUI();
-        controller.refreshData();
-    }
-
-    loginHandler(e) {
-        console.log("loginHandler()");
-        //e.stopPropagation();
-        e.preventDefault();
-        let username = $("#sign-in-form-username").val();
-        let password = $("#sign-in-form-password").val();
-        ds.BASignIn(username, password);
-
-    }
-
-    loginToggleUI() {
-
-        if (controller._isLoggedIn) {
-            $("#login").hide();
-            $("#content").show();
-        } else {
-            $("#login").show();
-            $("#content").hide();
-        }
-    }
-    //login end
-
     //pagination start
-
 
     /**
      * Generate a pagination elements dynamicaly.
@@ -267,28 +233,25 @@ class LeadTable {
         $("#pagination ul").remove();
         let isStart = currPage == 0;
         let isEnd = currPage == lastPage;
-        let ul = $(`<ul class="pagination-pointed pagination text-center" role="navigation" aria-label="Pagination">`)
-            .append(`<li>`)
-            .append(`<a class="pagination-pointed-button ${isStart ? 'disabled' : ''}" href="#" data-pagination-target="prev" aria-label="Previous page">Previous</a>`)
-            .append(` <span class="show-for-sr">page</span>`)
-            .append(`</li>`);
-        let rangeStart = Math.max(currPage - 4, 0);
-        let rangeEnd = Math.min(currPage + 3, lastPage);
+        let ul = $(`<ul class="pagination text-center" role="navigation" aria-label="Pagination">`)
+            .append(`<li><a class=" ${isStart ? 'disabled' : ''}" href="#" data-pagination-target="prev" aria-label="Previous page">Previous</a><span class="show-for-sr">page</span></li>`);
+        let rangeStart = Math.max(currPage - 1, 0);
+        let rangeEnd = Math.min(currPage + 1, lastPage);
         for (let i = 0; i <= lastPage; i++) {
-            ul.append('<li>');
+            //ul.append('<li>');
             if (i == currPage) {
                 //if the current page
-                ul.append(`<li class="current"><span class="show-for-sr">You're on page</span> ${i}</li>`);
+                ul.append(`<li class="current"><span class="show-for-sr">You're on page</span> ${i+1}</li>`);
                 continue;
-            } else if (i > rangeStart && i <= rangeEnd) {
+            } else if (i > rangeStart && i <= rangeEnd || i <3 || i > lastPage -2 ) {
                 //if in range
-                ul.append(`<li><a class="pagination-pointed-button" href="#" data-pagination-target="${i}" aria-label="Page ${i}">${i}</a></li>`);
+                ul.append(`<li><a href="#" data-pagination-target="${i}" aria-label="Page ${i+1}">${i+1}</a></li>`);
             }
         }//for
         ul.append(`<li><a class="pagination-pointed-button ${isEnd ? 'disabled' : ''}"  href="#" data-pagination-target="next" aria-label="Next page">Next <span class="show-for-sr">page</span>
                     </a></li></ul>`);
         $("#pagination").append(ul);
-        $(".pagination-pointed-button").click($.proxy(this.pagerHandler, this));
+        $(".pagination li a").click($.proxy(this.pagerHandler, this));
     }
 
     /**

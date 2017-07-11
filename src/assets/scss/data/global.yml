@@ -1,0 +1,53 @@
+leadHeaders:
+-
+ fieldName: firstName
+ friendlyName: First name
+ width: 100px
+-
+ fieldName : lastName
+ friendlyName : Last name
+ width : 100px
+-
+ fieldName : email
+ friendlyName : e-mail
+ width : 200px
+-
+ fieldName : phone
+ friendlyName : Phone
+ width : 200px
+-
+ fieldName : newsletter
+ friendlyName : News letter
+ width : 80px
+-
+ fieldName : ad_ID
+ friendlyName : Ad
+ width : 100px
+-
+ fieldName : campaign_ID
+ friendlyName : Campaign
+ width : 100px
+-
+ fieldName : device
+ friendlyName : Device
+ width : 100px
+-
+ fieldName : language
+ friendlyName : Language
+ width : 60px
+#-
+# fieldName : source
+# friendlyName : sent from
+# width : 230px
+-
+ fieldName : is_iintoo
+ friendlyName : Processed
+ width : 100px
+-
+ fieldName : syncop
+ friendlyName : Syncop
+ width : 90px
+-
+ fieldName : date
+ friendlyName : Date
+ width : 200px

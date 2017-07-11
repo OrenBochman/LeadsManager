@@ -1,8 +1,3 @@
-<div id="login" class="row ">
-  <div class="columns small-4 small-centered">
-    {{> sign-in-form}}
-  </div>
-</div>
 <div id="content">
 <div class="row small-up-1 ">
   <div class="columns small-centered">
@@ -20,9 +15,6 @@
       <div class='column small-2'>
         <input id="checkbox3" type="checkbox" checked='true'/><label for="checkbox3">Quarentined</label>
       </div>
-      <div class="button column small-1">
-        <a href="#"  class="button" id="csvButton" >Download CSV</a> 
-      </div>
     </div>
     <div class="row small-up-5" >    
       <div class="column small-1">	
@@ -39,7 +31,10 @@
         <input id="endDate" size="16" type="text" value="" readonly>	
       </div>
       <a href="#" id="refreshButton" class="button">update data</a>
-      <a href="#" id="addButton" class="button">add data</a>
+      <!--a href="#" id="addButton" class="button">add data</a-->
+      <div class="button column small-1">
+        <a href="#"  class="button" id="csvButton" >Download CSV</a> 
+      </div>
       
     </div>
   </form>

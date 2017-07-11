@@ -3,13 +3,13 @@
 
 class DS {
     constructor(amount=120){
-        console.log(`DS ctor start`); 
+        console.log(`*** DS ctor start`); 
         this.amount=amount;        
         faker.seed(123);        
         this.BAInit();
 
         //this.data=this._getLeadData();
-        console.log(`DS ctor end`); 
+        console.log(`*** DS ctor end`); 
     }
 
     /**
@@ -17,7 +17,7 @@ class DS {
      * 
      */
     BAInit(){
-
+        console.log(`*** DS BAInit()`); 
         backand.init({
             appName: 'jqueryapp',            
             anonymousToken: '553d5722-dfa1-401f-8cde-1425476751d1', 
@@ -32,17 +32,14 @@ class DS {
             .then(res => {
                 console.log('signin succeeded with user:' + res.data.username);
                 console.log(res);
-
                 controller._isLoggedIn=true;
-                controller.signIn();
-
-
+                controller.signInSuccess();
             })
             .catch(err => {
                 console.log(err);
                 controller._isLoggedIn=false;
+                controller.signInFailed();
             });
-
     }
 
     // test with :

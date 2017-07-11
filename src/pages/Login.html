@@ -1,0 +1,39 @@
+<form id="sign-in-form" data-abide novalidate>
+  <div data-abide-error class="alert callout" style="display: none;">
+    <p><i class="fi-alert"></i> There are some errors in your form.</p>
+  </div>
+  <div class="row">
+    <div class="columns small-4 small-centered">
+      <label>User Name
+        <input type="text" placeholder="user name" required pattern="email" aria-describedby="user-help-text" id="sign-in-form-username">
+        <span class="form-error">
+          I'm required!
+        </span>
+      </label>
+      <p class="help-text" id="user-help-text">please enter the email</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns small-4 small-centered">
+      <label>Password
+        <input type="text" placeholder="password" id="sign-in-form-password" 
+        aria-describedby="user-help-password" required pattern="baPass" >
+        <span class="form-error">
+          I'm required!
+        </span>
+      </label>
+      <p class="help-text" id="user-help-password">use at least six charachers.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns small-4 small-centered">
+      <a href="#"  class="button" id="sign-in-form-button">Sign In</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns small-4 small-centered">
+      <div id="sign-in-form-err-message" class="hide">Sign In Failed</div>
+      <div id="sign-in-form-success-message" class="hide">Sign In Success</div>
+    </div>
+  </div>
+</form>
