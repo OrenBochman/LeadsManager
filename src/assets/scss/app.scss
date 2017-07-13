@@ -1,10 +1,10 @@
 @charset 'utf-8';
 
 @import 'settings';
-@import 'leadTable';
 @import 'foundation';
 @import 'motion-ui';
 @import 'foundation-datepicker';
+
 
 @include foundation-global-styles;
 @include foundation-grid;
@@ -51,3 +51,64 @@
 
 @include motion-ui-transitions;
 @include motion-ui-animations;
+
+
+
+.vanish{
+  visibility: hidden;
+
+}
+.show{
+  visibility: visible;
+
+}
+#searchMenuMain{
+    background-color: rgba(50,50,50,0.8);
+    border:none;
+    padding:0;
+}
+#searchMenuMain label{
+  color:white
+}
+
+.vanish{
+    display:none;
+}
+.tiny-text
+{
+    font-size: 13px;
+    line-height:12px;
+    padding:4px;
+}
+.orbit-caption
+{
+  direction: ltr
+}
+
+#airline_name{
+  color:white;
+
+}
+
+#searchMenuSecondary{
+    background-color: rgb(50,50,80);
+    border:none;
+    padding:0;
+}
+#searchMenuSecondary label{
+  color:white
+}
+
+#logo
+{
+  width:180px;
+}
+.unsync
+{
+  color:red !important
+}
+.quartine
+{
+  color:#e56bf4 !important;
+  font-weight: bold;
+}

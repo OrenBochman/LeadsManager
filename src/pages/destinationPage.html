@@ -1,0 +1,156 @@
+<div class="row ">
+  <div class="large-12 columns" style="margin-top:20px;"><span id="p_title">טיסות ל</span></div>
+  <div class="large-12 columns" style="padding:0">
+    <div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit data-options="animInFromLeft:fade-in; animInFromRight:fade-in; animOutToLeft:fade-out; animOutToRight:fade-out;">
+
+      <ul class="orbit-container" style="margin-top:10px;max-height:200px;">
+        <button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>
+        <button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>
+        <li class="is-active orbit-slide">
+          <img class="orbit-image" src="assets/img/orbit/Banner_1.jpg" alt="Space">
+          <figcaption class="orbit-caption">Space, the final frontier.</figcaption>
+        </li>
+        <li class="orbit-slide">
+          <img class="orbit-image" src="assets/img/orbit/Banner_2.jpg" alt="Space">
+          <figcaption class="orbit-caption">Lets Rocket!</figcaption>
+        </li>
+        <li class="orbit-slide">
+          <img class="orbit-image" src="assets/img/orbit/Banner_3.jpg" alt="Space">
+          <figcaption class="orbit-caption">Encapsulating</figcaption>
+        </li>
+        <li class="orbit-slide">
+          <img class="orbit-image" src="assets/img/orbit/Banner_4.jpg" alt="Space">
+          <figcaption class="orbit-caption">Outta This World</figcaption>
+        </li>
+      </ul>
+      <nav class="orbit-bullets">
+        <button class="is-active" data-slide="0"><span class="show-for-sr">First slide details.</span><span class="show-for-sr">Current Slide</span></button>
+        <button data-slide="1"><span class="show-for-sr">Second slide details.</span></button>
+        <button data-slide="2"><span class="show-for-sr">Third slide details.</span></button>
+        <button data-slide="3"><span class="show-for-sr">Fourth slide details.</span></button>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-8 columns">
+    <div class="callout" id="searchMenuMain">
+      <div class="row">
+        <div class="large-12 columns">
+          <form action="flightSearch.html" method="GET" id="destForm">
+            <fieldset class="large-4 columns">
+              <label>יציאה מ:
+                <div class="input-group">
+                  <input class="input-group-field" placeholder="תל אביב" type="text" id="origin" name="origin" list="json-datalist2">
+                  <datalist id="json-datalist2"></datalist>
+                  <a class="input-group-button button" onclick="page_module.submitForm()">חפש</a>
+                </div>
+              </label>
+
+              <label>תאריך יציאה:
+                <div class="input-group">
+
+                  <input class="input-group-field"  type="text" id="startDate" name="sdate">
+                  <a class="input-group-button button" id="dp4" data-date-format="dd-mm-yyyy" ><i class="fi-calendar"></i></a>
+
+                </div>
+              </label>
+
+            </fieldset>
+
+            <fieldset class="large-4 columns end">
+                <label>נחיתה ב:
+                  <div class="input-group">
+                    <input class="input-group-field"  type="text" id="dest" name="dest" list="json-datalist">
+                     <datalist id="json-datalist"></datalist>
+                    <a class="input-group-button button" onclick="page_module.submitForm()">חפש</a>
+                  </div>
+                </label>
+
+              <label>תאריך חזרה:
+                <div class="input-group">
+
+                  <input class="input-group-field"  type="text" id="endDate" name="edate">
+                 <a class="input-group-button button" id="dp5" data-date-format="dd-mm-yyyy" ><i class="fi-calendar"></i></a>
+
+                </div>
+              </label>
+
+            </fieldset>
+
+            <fieldset class="large-2 columns">
+              <label>מבוגר (13-64)
+                <select>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </label>
+            </fieldset>
+            <fieldset class="large-2 columns">
+              <label>מבוגר (13-64)
+                <select>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </label>
+            </fieldset>
+            <fieldset class="large-2 columns">
+              <label>מבוגר (13-64)
+                <select>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </label>
+            </fieldset>
+            <fieldset class="large-2 columns">
+              <label>מבוגר (13-64)
+                <select>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </label>
+            </fieldset>
+            <fieldset class="large-2 columns end">
+              <label>מבוגר (13-64)
+                <select>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </label>
+            </fieldset>
+            <fieldset class="large-4 columns large-offset-8" style="margin-top:20px">
+              <a class="button large success float-left" onclick="page_module.submitForm()">התחל חיפוש</a>
+            </fieldset>
+
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="large-4 columns">
+        <div class="large-12 columns">
+          <span id="p_title_about">קצת על </span>
+        </div>
+        <hr>
+      <div class="large-12 columns tiny-text">
+        <span>
+          חשוב לדעת שהיום אפשר למצוא טיסות זולות ליעדים פופולריים כמו אמסטרדם, במחירי LOW COST. למה הכוונה? אלו הן טיסות זולות לאמסטרדם, אשר בהן אוכל לא מוגש במהלך הטיסה, ואתם צריכים לשלם עבור כל מטען שאתם נושאים עמכם. עם זאת, אלו הן אכן טיסות זולות במיוחד, וליעדים קצרים כמו אמסטרדם, המחיר אפילו יורד עוד יותר.
+מכיוון שכולם מחפשים היום טיסות זולות לאמסטרדם, אפשר למצוא לכך מענה פשוט. היום יש צעירים רבים שמחפשים טיסות זולות ליעד המדהים הזה, לחופשה קצרה ומהנה. אתם תוכלו למצוא היום חבילות מיוחדות שיציעו לכם להגיע לאמסטרדם בקלות, ללא בעיות תקציב ומימון. החופשה הבאה שלכם קרובה מאי פעם – טוסו על זה!
+היום קיימת אפשרות למצוא טיסות זולות לאמסטרדם במידה ואתם מחפשים טיסות שכר. טיסות שכר זולות לאמסטרדם, הן טיסות שלמעשה יוצאות כאשר הן מתמלאות לחלוטין. הטיסות הללו יוצאות לרוב בחודשי התיירות העמוסים,
+        </span>
+      </div>
+    </div>
+</div>

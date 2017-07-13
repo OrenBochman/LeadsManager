@@ -1,58 +1,74 @@
-<div id="content">
-<div class="row small-up-1 ">
-  <div class="columns small-centered">
-    <h1>Welcome to the IINTOO Lead Manager</h1>
+<div class="row expanded">
+  <div class="large-12 columns" style="padding:0;">
+
+
   </div>
 </div>
-  <form>
-    <div class="row small-up-4">    
-      <div class='column small-2'>
-        <input id="checkbox1" type="checkbox" checked='true'/><label for="checkbox1">Leads</label>
-      </div>
-      <div class='column small-2'>
-        <input id="checkbox2" type="checkbox" checked='true'/><label for="checkbox2">Unprocessed</label>
-      </div>
-      <div class='column small-2'>
-        <input id="checkbox3" type="checkbox" checked='true'/><label for="checkbox3">Quarentined</label>
-      </div>
-    </div>
-    <div class="row small-up-5" >    
-      <div class="column small-1">	
-        <span class="prefix">start<i class="fa fa-calendar"></i></span>
-      </div>
-      <div class="column small-3">
-        <input id="startDate" size="16" type="text" value="" readonly>	
+
+<div class="row expanded" style="background-color:#b3b3b3;padding:12px;">
+  <div class="small-4 columns" id="filters">
+    <fieldset class="large-12 columns">
+          <legend>Lead Type</legend>
+          <input id="approved" type="checkbox" onclick="page_module.listFilter(event)" checked><label for="approved">Approved</label>
+          <input id="denied" type="checkbox" onclick="page_module.listFilter(event)" checked><label for="denied">Denied</label>
+          <input id="quarentine" type="checkbox" onclick="page_module.listFilter(event)" checked><label for="quarentine">Dropped</label>
+        </fieldset>
+</div>
+<div class="small-8 columns" id="">
+    <legend>Select Dates</legend>
+      <form id="dates" action="javascript:page_module.submitDates()">
+        <div class="row">
+          <div class="small-3 columns">
+              <label> From<input id="dp4" type="text"></label>
+          </div>
+          <div class="small-3 columns">
+                <label> To  <input id="dp5" type="text"> </label>
+          </div>
+
+        <div class="small-3 columns" style="margin-top:22px;">
+            <input type="submit" class="button" value="Submit">
+        </div>
+        <div class="small-2 columns end" id="" style="margin-top:22px;">
+          <a class="button success">CSV</a>
+        </div>
       </div>
 
-      <div class="column small-1">	
-        <span class="prefix">end<i class="fa fa-calendar"></i></span>
-      </div>
-      <div class="column small-3">
-        <input id="endDate" size="16" type="text" value="" readonly>	
-      </div>
-      <a href="#" id="refreshButton" class="button">update data</a>
-      <!--a href="#" id="addButton" class="button">add data</a-->
-      <div class="button column small-1">
-        <a href="#"  class="button" id="csvButton" >Download CSV</a> 
-      </div>
-      
-    </div>
-  </form>
 
-<div class="row small-1-up expanded">
-    <table id="table1" class="column small-12" style="table-layout: fixed; word-wrap:break-word;">
+
+      </form>
+
+
+</div>
+
+
+</div>
+
+
+<div class="row expanded">
+  <div class="small-12 columns" id="list">
+    <table>
       <thead>
-        <tr >
-          {{#each global.leadHeaders}}
-          <th width="{{ width }}"><a href="#{{ fieldName }}">{{ friendlyName }}</a></th>
-          {{/each}}
+        <tr>
+          <th width="150">Name</th>
+          <th width="120">Email</th>
+          <th width="100">Phone</th>
+          <th width="80">Campaign</th>
+          <th width="80">Ad</th>
+            <th width="20">Device</th>
+          <th width="10">inSync</th>
+          <th width="20">Score</th>
+          <th>Date</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="tableBody">
+
       </tbody>
     </table>
+  </div>
 </div>
-  <div id="pagination" class="pagination-centered "></div>
-  <div id="pagination1" class="pagination-centered "></div>
-<div>
-
+<div class="row">
+  <div class="small-12 column">
+    <ul class="pagination" role="navigation" aria-label="Pagination" id="paginationC">
+    </ul>
+  </div>
+</div>
