@@ -57,6 +57,8 @@ class HomePage extends TSPage
 
 		dataService.getUsers(this.onUserLoad,pageNum,date1,date2);
 
+		$("#csvButton").click($.proxy(this.genCSV,this));
+
 	}
 
 	submitForm()
@@ -168,9 +170,59 @@ class HomePage extends TSPage
     // get an associative array of just the values.
 		var d1 = $($inputs[0]).val()
 		var d2 = $($inputs[1]).val()
-    console.log(new Date(d1).getTime() / 1000)
+    	console.log(new Date(d1).getTime() / 1000)
 		console.log(new Date(d2).getTime() / 1000)
 	}
+
+
+	//start CSV generation
+    /**
+     * handle for the CSV generation button click event
+     * 
+     * @param {*} e the event
+     */
+    genCSV(e) {
+        console.log("LeadTable.genCSV()");
+        //var data = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
+		let csv = ``;
+		let rowDelimeter = '\n';
+		let colDelimeter = `,`
+        $("#table1 thead th").each(function (index, element) {				
+            let text = $(this).text();
+            csv += `${index == 0 ? '' : colDelimeter}'${text}'`;
+        });        
+        csv += rowDelimeter;        
+        $("#table1 tbody tr").each(function (rowIndex, rowElement) {
+            $(this).find('td').each(function (colIdx, colElement) {                
+                let text = $(this).text();
+                csv += `${colIdx == 0 ? '' : colDelimeter}'${text}'`;
+            });
+            csv += rowDelimeter;
+        });
+        this.download(csv, 'dowload.csv', 'text/csv;encoding:utf-8');
+    }
+
+    download(content, fileName, mimeType) {
+        console.log(`download`);
+        var a = document.createElement('a');
+        mimeType = mimeType || 'application/octet-stream';
+
+        if (navigator.msSaveBlob) { // IE10
+            navigator.msSaveBlob(new Blob([content], {
+                type: mimeType
+            }), fileName);
+        } else if (URL && 'download' in a) { //html5 A[download]
+            a.href = URL.createObjectURL(new Blob([content], {
+                type: mimeType
+            }));
+            a.setAttribute('download', fileName);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } else {
+            location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
