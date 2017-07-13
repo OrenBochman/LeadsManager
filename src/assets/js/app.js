@@ -75,8 +75,5 @@ var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
 return  date.getDate() +"/"+ (date.getMonth()+1) +"/"+ date.getFullYear() + "  " +formattedTime;
 }
 
-
-
-
 dataService.init();
 $(document).foundation();

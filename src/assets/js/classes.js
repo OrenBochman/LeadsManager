@@ -21,8 +21,8 @@ class HomePage extends TSPage
 		var t = startDate.getFullYear() + "-" + (startDate.getMonth()+1)+ "-" + startDate.getDate()
 		var t2 = endDate.getFullYear() + "-" + (endDate.getMonth()+1)+ "-" + endDate.getDate()
 		var pageNum = getParameterByName("pageNum") || 1;
-		var date1 = getParameterByName("date1") || null;
-		var date2 = getParameterByName("date2") || null;
+		var date1 = getParameterByName("date1") || new Date().getTime()/1000-(72*60*60*1000);
+		var date2 = getParameterByName("date2") || new Date().getTime()/1000;
 		console.log(date1)
 
 		$('#dp4').attr('data-date', t);
@@ -61,24 +61,14 @@ class HomePage extends TSPage
 
 	}
 
-	submitForm()
-	{
-		var formData =JSON.parse(JSON.stringify($("#destForm").serializeArray()));
 
-		console.log(formData)
-
-
-		$("#destForm").submit();
-
-	}
 
 	initPagination(totalRows)
 	{
 		alert(totlaRows)
 	}
 
-
-	onUserLoad(list,totalRows,page)
+onUserLoad(list,totalRows,page)
 	{
 		var tbody = $('#tableBody')
 		for (var i =0;i<list.length;i++)
@@ -144,11 +134,88 @@ class HomePage extends TSPage
 		}
 		if(page<totalPages)
 		{
-			let nxt = $('<li><a href="index.html?pageNum=' + (Number(page)+1)+'" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li>')
+			let nxt = $(`<li><a href='index.html?pageNum=${(Number(page)+1)}&date1=${page_module.date1}&date2=${page_module.date2}' 
+								aria-label='Next page'>Next <span class='show-for-sr'>page</span></a></li>`);
 			pagC.append(nxt)
 		}
 	}
 
+
+	
+/*
+	onUserLoad(list,totalRows,page)
+	{
+		//leadstable
+		var tbody = $('#tableBody')
+		for (var i =0;i<list.length;i++)
+		{
+			var tr = $("<tr></tr>")
+			if( !list[i].is_iintoo) {
+					tr.addClass("denied_view")
+					if( list[i].syncop==3) {
+						tr.removeClass("denied_view")
+						tr.addClass("quarentine_view")
+					}
+			}else {
+				tr.addClass("approved_view")
+			}
+
+			tr.append("<td>" + list[i].firstName +" " + list[i].lastName+ "</td>")
+			tr.append("<td>" + list[i].email + "</td>")
+			tr.append("<td>" + list[i].phone + "</td>")
+			tr.append("<td>" + list[i].campaign_ID + "</td>")
+			tr.append("<td>" + list[i].ad_ID + "</td>")
+			tr.append("<td>" + list[i].device + "</td>")
+			tr.append("<td>" + list[i].is_iintoo + "</td>")
+			tr.append("<td>" + list[i].syncop + "</td>")
+			tr.append("<td>" + convertToDate(list[i].date) + "</td>")
+
+			tbody.append(tr)
+			if(!list[i].is_iintoo)
+			{
+				if(list[i].syncop<3){
+					tr.addClass("unsync")
+				}else {
+ 						tr.addClass("quartine")
+				}
+			}
+		}
+
+		//pagiantion
+		var pagC = $("#paginationC")
+		var totalPages = Math.ceil(totalRows/pageRowSize)
+		if(page>1)
+		{
+			let prv = $('<li><a href="index.html?pageNum=' + (Number(page)-1)+'" aria-label="Previous page">Previous <span class="show-for-sr">page</span></a></li>')
+			pagC.append(prv)
+		}
+		for(var i = 0;i<totalPages;i++){
+
+			if((i+1)==page)
+			{
+				var lir = $('<li>' + Number(i+1) + '</li>')
+				lir.addClass("current")
+				pagC.append(lir)
+			}else {
+				if(i<5 || i>(totalPages-2)){
+				  var lir2 = $(`<li><a href='index.html?pageNum=${(i+1)}&date1=${page_module.date1}&date2=${page_module.date2}'`+' aria-label="Page"'+ (i+1)+'>'+ (i+1)+'</a></li>');
+					pagC.append(lir2)
+				}
+			}
+
+			if(totalPages>8 && i==5){
+				let dots = $('<li class="ellipsis" aria-hidden="true"></li>')
+				pagC.append(dots)
+			}
+
+		}
+		if(page<totalPages)
+		{
+			let nxt = $(`<li><a href="index.html?pageNum=${(Number(page)+1)}&date1=${page_module.date1}&date2=${page_module.date2}` + '&date1=${page_module.date1}&date2=${page_module.date2}`+" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li>')
+			pagC.append(nxt)
+		}
+	}
+*/
 
 	listFilter(event)
 	{
@@ -164,14 +231,34 @@ class HomePage extends TSPage
 
 	submitDates()
 	{
+		console.log(" HomePage:submitDates()");
 		var $inputs = $('#dates :input');
 
     // not sure if you wanted this, but I thought I'd add it.
     // get an associative array of just the values.
 		var d1 = $($inputs[0]).val()
 		var d2 = $($inputs[1]).val()
+		page_module.date1=new Date(d1).getTime() / 1000;
+		page_module.date2=new Date(d2).getTime() / 1000;
+		
     	console.log(new Date(d1).getTime() / 1000)
 		console.log(new Date(d2).getTime() / 1000)
+		window.location.replace(`index.html?pageNum=${page_module.pageNum || 1 }&date1=${page_module.date1}&date2=${page_module.date2}`);
+
+	}
+
+	submitForm()
+	{
+		console.log(" HomePage:submitForm()");
+
+//		var formData =JSON.parse(JSON.stringify($("#destForm").serializeArray()));
+
+		console.log(formData)
+
+//		$("#destForm").submit();
+
+
+
 	}
 
 
@@ -226,7 +313,6 @@ class HomePage extends TSPage
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 class LoginPage extends TSPage
 {

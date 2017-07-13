@@ -34,20 +34,22 @@ login:function(dataObj)
 
 },
 
-  getUsers:function(callback,page,date1,date2)
+  getUsers:function(callback,page,date1=1483221600,date2=1499893200)
   {
 
     backand.query.get("getLeads", {
-    date1: "1496808353",
-    date2: "1596809353",
+    date1:  date1, 
+    date2:  date2,
     pageSize: pageRowSize,
     offset: page
 })
 
   .then(res => {
-      console.log(res.totalRows);
-    console.log(res.data);
-    callback(res.data,res.totalRows,page)
+    console.log(res);
+    console.log(`res.totalRows:${res.totalRows}`);
+//   console.log(res.data);
+    if(res.data && res.data.length)
+      callback(res.data,res.data[0].totalRows,page);
   })
   .catch(err => {
     console.log(err);
