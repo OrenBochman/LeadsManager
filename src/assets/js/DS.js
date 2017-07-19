@@ -49,7 +49,7 @@ login:function(dataObj)
     console.log(`res.totalRows:${res.totalRows}`);
 //   console.log(res.data);
     if(res.data && res.data.length)
-      callback(res.data,res.data[0].totalRows,page);
+      callback(res.data,res.data[0].totalRows,page,date1,date2);
   })
   .catch(err => {
     console.log(err);
