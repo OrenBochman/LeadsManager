@@ -4,9 +4,7 @@ class TSPage
 {
 	constructor(){
 		console.log("constructor TSPage")
-
 		this.self = this
-
 	}
 }
 
@@ -15,19 +13,20 @@ class HomePage extends TSPage
 {
 	constructor(){
 		super();
-
-		var startDate = new Date();
-		var endDate = new Date();
-		var t = startDate.getFullYear() + "-" + (startDate.getMonth()+1)+ "-" + startDate.getDate()
-		var t2 = endDate.getFullYear() + "-" + (endDate.getMonth()+1)+ "-" + endDate.getDate()
 		var pageNum = getParameterByName("pageNum") || 1;
-		var date1 = getParameterByName("date1") || new Date().getTime()/1000-(72*60*60*1000);
-		var date2 = getParameterByName("date2") || new Date().getTime()/1000;
-		console.log(date1)
+		var date1   = getParameterByName("date1") || new Date().getTime()/1000-(72*60*60*1000);
+		var date2   = getParameterByName("date2") || new Date().getTime()/1000;
+		console.log(date1);
+		var startDate = new Date(date1);
+		var endDate = new Date(date2);
+
+		var t = startDate.getFullYear() + "-" + (startDate.getMonth()+1)+ "-" + startDate.getDate();
+		var t2 = endDate.getFullYear() + "-" + (endDate.getMonth()+1)+ "-" + endDate.getDate();
 
 		$('#dp4').attr('data-date', t);
 		$('#dp5').attr('data-date', t2);
-
+		$('#dp4').val(t);
+		$('#dp5').val(t2);
 
 		$('#dp4').fdatepicker()
 			.on('changeDate', function (ev) {
@@ -68,7 +67,7 @@ class HomePage extends TSPage
 		alert(totlaRows)
 	}
 
-onUserLoad(list,totalRows,page,date1,date2)
+	onUserLoad(list,totalRows,page,date1,date2)
 	{
 		var tbody = $('#tableBody')
 		for (var i =0;i<list.length;i++)
