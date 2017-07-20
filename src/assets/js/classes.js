@@ -80,8 +80,6 @@ class HomePage extends TSPage
 
 	}
 
-
-
 	initPagination(totalRows)
 	{
 		alert(totlaRows)
@@ -93,9 +91,9 @@ class HomePage extends TSPage
 		for (var i =0;i<list.length;i++)
 		{
 			var tr = $("<tr></tr>")
-			if( !list[i].is_iintoo) {
+			if( !list[i].is_iintoo){
 					tr.addClass("denied_view")
-					if( list[i].syncop==3) {
+					if( list[i].syncop==3){
 						tr.removeClass("denied_view")
 						tr.addClass("quarentine_view")
 					}
@@ -128,27 +126,30 @@ class HomePage extends TSPage
 		var totalPages = Math.ceil(totalRows/pageRowSize)
 		if(page>1)
 		{
-			let prv = $(`<li><a href='index.html?pageNum=${(Number(page)-1)}&date1=${date1}&date2=${date2}' aria-label='Previous page'>Previous <span class='show-for-sr'>page</span></a></li>`)
-			
+			let prv = $(`<li><a href='index.html?pageNum=${(Number(page)-1)}&date1=${date1}&date2=${date2}' aria-label='Previous page'>Previous <span class='show-for-sr'>page</span></a></li>`)			
 			pagC.append(prv)
 		}
 		for(var i = 0;i<totalPages;i++){
 
-			if((i+1)==page)
-			{
-				//var lir = $('<li>' + Number(i+1) + '</li>')
+			if((i+1)===Number(page))//current page has no link
+			{				
 				var lir = $(`<li>${Number(i+1)}</li>`)
 				lir.addClass("current")
 				pagC.append(lir)
 			}else {
-				if(i<5 || i>(totalPages-2)){
-				  var lir2 = $(`<li><a href='index.html?pageNum=${(i+1)}&date1=${date1}&date2=${date2}' aria-label='Page${(i+1)}'>${(i+1)}</a></li>`
-				)
-					pagC.append(lir2)
+
+				if( (i + 1) < 3   			               /* pages 1-2 */
+			  	 || (i + 1) === (Number(page) - 1 )        /* the previous */
+				 || (i + 1) === (Number(page) + 1 ) 	   /* the next page */
+				 || (i + 1) > (totalPages - 1)             /* the last three pages */ 				   
+			 ){ 
+				 console.log(`=====>i+1=${i+1},page=${page},totalPages=${totalPages}`)
+				  var lir2 = $(`<li><a href='index.html?pageNum=${(i+1)}&date1=${date1}&date2=${date2}' aria-label='Page${(i+1)}'>${(i+1)}</a></li>`)
+				  pagC.append(lir2)
 				}
 			}
-			//this is a bug as it does not consider the current page
-			if(totalPages>8 && i==5){
+
+			if(totalPages>8 && i+1 < totalPages-2){
 				let dots = $('<li class="ellipsis" aria-hidden="true"></li>')
 				pagC.append(dots)
 			}
