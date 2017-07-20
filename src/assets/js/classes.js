@@ -16,24 +16,29 @@ class HomePage extends TSPage
 		var pageNum = getParameterByName("pageNum") || 1;
 		var date1   = getParameterByName("date1") || new Date().getTime()/1000-(72*60*60*1000);
 		var date2   = getParameterByName("date2") || new Date().getTime()/1000;
-		console.log(date1);
-		console.log(typeof date1);
+
 		var startDate,endDate;
 
 		if(typeof date1 == "number"){
-			startDate = new Date(date1);
+			startDate = new Date(date1*1000);
 		}else if (typeof date1 == "string")
 		{
 			startDate =new Date( parseInt(date1)*1000);
-		}					
+		}else{
+			console.log(date1);
+			console.log(typeof date1);
+		}
 		if(typeof date2 == "number"){
-			endDate = new Date(date2);
+			endDate = new Date(date2*1000);
 		}
 		else if (typeof date2 == "string")
 		{
 			endDate = new Date( parseInt(date2)*1000);
 		}		
-		
+		else{
+			console.log(date2);
+			console.log(typeof date2);
+		}
 
 		var t = startDate.getFullYear() + "-" + (startDate.getMonth()+1)+ "-" + startDate.getDate();
 		var t2 = endDate.getFullYear() + "-" + (endDate.getMonth()+1)+ "-" + endDate.getDate();
