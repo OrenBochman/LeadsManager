@@ -14,9 +14,9 @@ class HomePage extends TSPage
 	constructor(){
 		super();
 		var pageNum = getParameterByName("pageNum") || 1;
-		var date1   = getParameterByName("date1") || new Date().getTime()/1000-(72*60*60*1000);
+		var date1   = getParameterByName("date1") || new Date().getTime()/1000-(72*60*60); //unix date is in seconds
 		var date2   = getParameterByName("date2") || new Date().getTime()/1000;
-
+		console.log(`date1=${date1}`);
 		var startDate,endDate;
 
 		if(typeof date1 == "number"){
